@@ -54,9 +54,9 @@ Left Hop is implemented by the following Brainsub algorithm:
 ```
 M(_1)> /move count into W, then move pointer to W
 [
-    M(1000_) L(4) /move count into previous W, then move pointer to previous W
+    M(100_) L(3) /move count into previous W, then move pointer to previous W
     - /decrease count
 ] /repeat until the count is 0
 < /move back to D
 ```
-The algorithm can be adapted by changing `M(1000_) L(4)` to `M(_0001) R(4)` if hopping right
+The algorithm can be adapted by changing `M(100_) L(3)` to `M(_001) R(4)` if hopping right
