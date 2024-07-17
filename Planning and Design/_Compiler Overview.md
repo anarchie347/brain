@@ -6,8 +6,8 @@ See individual files for details about each intermediate language
 # Intermediate Languages
 
 1. Brainfuck
-2. Brainfuck High Efficiency
-3. BrainHop
+2. BrainSub
+3. BrainClump
 
 ...
 
