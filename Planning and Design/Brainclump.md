@@ -5,8 +5,6 @@ Brainclump adds the following additions:
 - If statements
 - Move Left/Right by a value stored in a cell (hop)
 
-Its syntax is still based on single symbol instructions, but some instructions take paramters, given in `()` after the instruction.
-
 ## How
 
 BrainClump segments memory into 5 types:
@@ -34,13 +32,13 @@ Since the algorithm will only be executed when pointing at a D cell, D is used t
 >Z- /set X = 255
 << /go back to D
 [ /enter if D != 0
-    {y} /execute D != 0 code
+    {1} /execute D != 0 code
     > /go to W which is 0, so loop exits
 ]
 /if D == 0, pointer at D, else pointer at W which is 0
 >+ /if D == 0, pointer at  W which is 1, else pointer at X which is 0
 [ /enter if D == 0
-    {x} /execite D == 0 code
+    {0} /execite D == 0 code
     >> / go to X which is 0, so loop exits
 ]
 / pointer at X
