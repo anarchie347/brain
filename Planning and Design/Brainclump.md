@@ -4,6 +4,7 @@ Brainclump adds the following additions:
 
 - If statements
 - Move Left/Right by a value stored in a cell (hop)
+- Copy
 
 ## How
 
@@ -60,3 +61,13 @@ M(_1)> /move count into W, then move pointer to W
 < /move back to D
 ```
 The algorithm can be adapted by changing `M(100_) L(3)` to `M(_001) R(4)` if hopping right
+
+### Copy
+
+Copy acts very similar to [Brainsub](./Brainsub.md)'s `M` operation, except that it copies rather than moves. This is a feature of Brainclump rather than Brainsub because it requires extra memory. The algorithm is as follows:
+
+Modify the argument to account for the fact that only every 3rd cell stores data, so `1_01` goes to `100 _ 000 001` (spaces for illustration purposes only)
+Modify the arguemtn so the value is also copied to the W cell after the D cell, so `100 _ 000 001` from previous step goes to `100 _ 100 001`
+Call `M` with this modified argument
+Call `M(1_)` to move the value from the W to D
+Now the value has been copied
