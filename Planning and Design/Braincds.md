@@ -13,3 +13,7 @@ THe following are examples of compiler defined subroutines:
 - For loops
 - Hop (Move left or right a number of cells indicated by the current cell)
 - Copy (takes an arguement in the same format as [Brainsub](./Brainsub.md) `M`)
+- Write (uses a working cell to avoid overwrite data)
+- RestrictedRead (Similar to read function in brainfuck, except only allows entry of certain characters)
+
+Refer to [Obsolete-Brainclump](./Obsolete-Brainclump.md) for how some of these will be implemented. Implementation details will be moved here
