@@ -10,7 +10,7 @@ All languages have subroutines(*) that can be called and have arguements passed.
 
 1. Brainfuck
 2. BrainSub
-3. BrainClump
+3. BrainSplit
 
 ...
 
