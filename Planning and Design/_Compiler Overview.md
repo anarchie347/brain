@@ -9,8 +9,8 @@ All languages have subroutines(*) that can be called and have arguements passed.
 # Intermediate Languages
 
 1. Brainfuck
-2. BrainSub
-3. BrainSplit
+2. Brainsub
+3. Brainsplit
 
 ...
 

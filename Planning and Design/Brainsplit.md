@@ -1,4 +1,4 @@
-# BrainSplit
+# Brainsplit
 
 Brainsplit takes the single memory tape of brainfuck and splits it into 2 separate memory tapes, a data memory and a working memory
 This is achieved by making every other cell a working memory cell, so to traverse to the next memory cell of the same type, the brainfuck instruction `>>` is used. to swap memories, the instruction `>` or `<` are used.
