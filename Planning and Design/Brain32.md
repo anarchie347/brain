@@ -30,4 +30,5 @@ THe following symbols replace `<>` from brainfuck in Brain32:
 
 `+-` instructions are converted to work with the full 4 cells of data
 
-## HOW AM I GONNA DEAL WITH MOVING 32bit NUMS INTO WORKING
+32 bit nums cannot be moved into memory directly, they must be moved 8 bits at a time and delat with individually
+The next language up will implement functions that use working and will not expose W to higher languages, so higher languages do not have to deal with W cells not being 32bit
