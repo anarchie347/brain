@@ -58,3 +58,72 @@ The encasing braces `{` `}` corresspond to `<<<` `>>>` respectively to move in a
 `M(x)` and `C(x)` are operatiojns that move or copy respectively the W cell into the cell in position x (0, 1, 2, 3)
 
 The pointer is pointing at a W cell
+
+
+# Translation
+
+## shorthand
+
+The following defines subroutines used cin these defintions that will be substituted in when writing the compiler:
+
+- Ia(x)(y):
+
+I is the If 0 function
+
+If `a` is present, it is hard coded and refers to the starting cell. If `a` is not present, refer to I(x)(y). In the code below, `W` and `D` refer to 'move pointer to W' or 'move pointer to D', which can be hardcoded from what 'a' is
+
+`x` is the 'Do if the cell is 0` code that is exdecuted at the cell that I is called at
+
+`y` is 'if not 0' code
+
+```
+[
+    W+
+    D-
+] move to W cell
+I(DxW)(DyW) run regualar if but execute args at data cell
+```
+
+- I(x)(y)
+
+refer to 'Ia(x)(y)' for explanation of args
+```
+>>>>[-] /set next W1 to 0
+>>>>[-]-  /set W2 to 255
+<<<< <<<< /move to W0
+[
+    y /run else code at W0
+    >>>> /move to W1 which is 0
+]
+/if val = 0, pointer at W0, else pointer at W1
+>>>> /if val = 0, pointer at W1 (0), else pointer at W2 (255)
++ /if val = 0, pointer at W1 (1), else pointer at W2 (0)
+[
+    <<<<
+    x / execute code at W0
+    >>>> >>>> + resets W2 from 255 to 0 and exits on W2
+] /exits on W2
+<<<< <<<< /move back to W0 to exit
+```
+
+## D mode
+THis involves dealing with 32bit and handling operations accordingly
+
+All translations assume the pointer is at the rightmost, least significant cell
+
+`+`
+```
++
+I0(
+    <+
+    I1(
+        <+
+        I2(
+            <+>
+        )
+        >
+    )
+    >
+)
+```
+This effectively translates to add 1 to least significant, if it 0 then add one to next cell (carry) and keep going to the most significant cell
