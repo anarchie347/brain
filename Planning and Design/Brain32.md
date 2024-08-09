@@ -120,11 +120,11 @@ I0(
         <+
         I2(
             <+>
-        )
+        )()
         >
-    )
+    )()
     >
-)
+)()
 ```
 This effectively translates to add 1 to least significant, if it 0 then add one to next cell (carry) and keep going to the most significant cell
 
@@ -136,11 +136,10 @@ I0(
         <
         I2(
             <->
-        )
+        )()
         ->
-    )
+    )()
     ->
-)
+)()
 ```
 THis works in a similar vein to addition, but the zero check has to be done before the subtraction
-
