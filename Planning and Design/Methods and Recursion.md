@@ -9,9 +9,15 @@ Recursion will be implemented in Brain by one of the higher level intermediate l
 Method substitution will be used until a method is reduced to only calling itself.
 At this point, the compiler will convert the recursive function using the following algorithm:
 
-Declare a stack
-Loop until stack is empty
-Put code inside loop
-At any recursive calls, push all local variables to stack, push return address to stack and start over at the loop again
+- Declare a stack
+- Loop until stack is empty
+- Put code inside loop
+- At any recursive calls, push all local variables to stack, push return address to stack and retart the methods code (see state tracking)
 
-Tis algorithm is not rigorous and needs improving
+This algorithm is not rigorous and needs improving
+
+# State tracking
+
+at the start of the subroutine, a state variable (bool) is declared.
+The code of the subroutine (including state declaration) is wrapped in a loop
+As there is no equivalent of a `goto` statement to restart the subroutine, everywhere a recurisve call appears, all code after it in the subroutine is wrapped in an if statement, so only runs if state is true. THis is so that a 'go to start of methods' statement can be emulated by skipping all remaining code by setting state to false
