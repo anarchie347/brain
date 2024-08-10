@@ -62,6 +62,13 @@ The pointer is pointing at a W cell
 
 # Translation
 
+## cell descriptions:
+
+Wx refers to a working cell, where x is the index. The current cell block is index 0
+
+Dx refers to a data cell in the current block as shown below:
+
+W0 | D3 | D2 | D1 | D0
 ## shorthand
 
 The following defines subroutines used cin these defintions that will be substituted in when writing the compiler:
@@ -143,3 +150,23 @@ I0(
 )()
 ```
 THis works in a similar vein to addition, but the zero check has to be done before the subtraction
+
+`[`
+```
+<<<<[-]>>>> /zero W0
+[>+<-] /copy to W1
+[<<<<+>>>>[-]] /if D0 not zero, increment W0, zero D0 to exit loop
+>[<+>-]< /move W1 back into D0
+
+Repeat process for other D cells, so that W0 stores the number of not-zeroes encountered, so if W0 is 0, then D is 0
+
+position pointer at W0 cell
+[>>>> /test for 0 on W0 cell, then move to D0
+```
+
+`]`
+```
+same process as '[' to set W0 to 0 if D is 0, else W0 != 0
+position pointer at W0 cell
+]>>>> move pointer back to D0
+```
