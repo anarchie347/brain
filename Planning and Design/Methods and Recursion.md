@@ -22,6 +22,9 @@ at the start of the subroutine, a state variable (bool) is declared.
 The code of the subroutine (including state declaration) is wrapped in a loop
 As there is no equivalent of a `goto` statement to restart the subroutine, everywhere a recurisve call appears, all code after it in the subroutine is wrapped in an if statement, so only runs if state is true. THis is so that a 'go to start of methods' statement can be emulated by skipping all remaining code by setting state to false
 
+State tracking must be an integer.
+after a reursive case has finished, the previous method has to be continued from partway thru (e.g. a goto). THis is not possible, so all the previous code should be wrapped in a state-dependent if statement, so it can be skipped after the reurisve case is completed
+
 # Example
 The following pseduocode:
 ```
