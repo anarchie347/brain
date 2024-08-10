@@ -170,3 +170,5 @@ same process as '[' to set W0 to 0 if D is 0, else W0 != 0
 position pointer at W0 cell
 ]>>>> move pointer back to D0
 ```
+
+all other mappins for D mode and all for W mode are either trivial, or no change is required
