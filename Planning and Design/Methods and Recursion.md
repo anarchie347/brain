@@ -10,22 +10,37 @@ Method substitution will be used until a method is reduced to only calling itsel
 At this point, the compiler will convert the recursive function using the following algorithm:
 
 - Declare a stack
+- declare a 'stage' integer variable
 - Loop until stack is empty
 - Put code inside loop
-- At any recursive calls, push all local variables to stack, push return address to stack and retart the methods code (see state tracking)
+- split code where any recursive calls occur, the recursive call is at the end of the block ,not the start of the new.
+- encase each block with an `if stage <= X && !skip` statement, where X is the ordered index of the block (0 indexed)
+- replace the recursive call with:
+    - Push all local vars to stack (not including stage and skip)
+    - Push the length the stack pointer has been moved in this operation to the stack
+    - Push the current value of stage to the stack
+    - Set skip = true
+    - Set stage to 0
+- At the end of the subroutine (within final stage block), add the following code:
+    - Stack pointer should be at the 'stage' from previous call
+    - set stage = pop from stack + 1
+    - use next value (length moved) to pop all variables from parent call off stack and into appropriate locations in variables
+    - stack pointer should now be pointed at the parent parent call's stage
+- At the end of the subroutine (outside final stage block, still inside loop), set skip to false
 
-This algorithm is not rigorous and needs improving
+this algorithm may need adjusting so that the 'end of subroutine within final stage' is put before stage 0, in an `if returning` block, where returning is a variable set to true when a method returns (so at the end of the loop when skip is changed), so that on the next iteration, the variables can be pulled from the stack and loaded. It may be possible to base this on the value of the 'skip' variable
 
 # State tracking
 
-at the start of the subroutine, a state variable (bool) is declared.
-The code of the subroutine (including state declaration) is wrapped in a loop
-As there is no equivalent of a `goto` statement to restart the subroutine, everywhere a recurisve call appears, all code after it in the subroutine is wrapped in an if statement, so only runs if state is true. THis is so that a 'go to start of methods' statement can be emulated by skipping all remaining code by setting state to false
+Flattening recurisve calls requires use of a `goto` statement. This is not possible, so 'stage' and 'skip' are used to emulate this.
+stage indicates where in the subroutine to go to. All if statements use `<=` so that after the block jumped to is finished, the code continues. 'skip' is used for backward `goto` statements, and indicates that the stage has not yet been reached and the code must loop to get back to the destination. This prevents blocks from running after the emulated `goto` that wouldve otherwise run based on assuming the goto has already been jumped to and the code was just continuing.
 
-State tracking must be an integer.
-after a reursive case has finished, the previous method has to be continued from partway thru (e.g. a goto). THis is not possible, so all the previous code should be wrapped in a state-dependent if statement, so it can be skipped after the reurisve case is completed
+When a recursive call is made, the current stage is pushed onto the stack so that when the call returns, it can jump to the correct place in the caller subroutine
 
-# Example
+# Memory
+All variables from parent calls are stored on the stack, so that they can be restored when the child returns. The distance the stack pointer moved when putting all these variables on the stack is stored so that the parent knows how far to go down the stack to retrieve all variables.
+
+# Example - not complete, uses an old uncomplete algorithm
 The following pseduocode:
 ```
 sub factorial(x) {
