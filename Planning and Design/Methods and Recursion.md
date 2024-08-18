@@ -1,6 +1,8 @@
 # Methods
 
-Methods in Brain will all be substituted into the main program at compile time. This will be dealt with by one of the high level intermediate languagues. FOr most cases, this is a trivial substitution and renaming of variables so they dont overlap. FOr recursive methods, this cannot be done, see below
+Methods in Brain will all be substituted into the main program at compile time. This will be dealt with by one of the high level intermediate languagues. FOr most cases, this is a trivial substitution and renaming of variables so they dont overlap. FOr recursive methods, this cannot be done, see below.
+
+Flattening of methods require that methods do not return anything. Hence as part of the substitution process, `return` statements will be converted to assignments to a `return_val` variable, and will use goto emulation (as explain in State tracking) to skip the rest of the subroutine after a return
 
 # Recursion
 
@@ -15,6 +17,7 @@ At this point, the compiler will convert the recursive function using the follow
 - Put code inside loop
 - split code where any recursive calls occur, the recursive call is at the end of the block ,not the start of the new.
 - encase each block with an `if stage <= X && !skip` statement, where X is the ordered index of the block (0 indexed)
+- variable declarations made within the subroutine should be hoisted outside the loop
 - replace the recursive call with:
     - Push all local vars to stack (not including stage and skip)
     - Push the length the stack pointer has been moved in this operation to the stack
@@ -54,12 +57,16 @@ is converted to the following (WIP):
 ```
 sub factorial(x) {
     let callStack = new stack
+    let stage = 0
+    let skip = false
    
-    while stack not empty {
-        let run = true
-        if x == 0 {
-            run = false
+    while stack not empty { //this should be a post-condition loop
+        if stage <= 0 && !skip {
+            if x == 0 {
+                run = false
+            }
         }
+        
         if run {
             let retVal = x
             stack.push(x)
