@@ -38,6 +38,8 @@ Any code wrapped in `{ }` is W mode
 
 Any code wrapped in `( )` is R mode (raw mode)
 
+Modes cannot be wrapped inside each other, so `{{}}` or `{()}` would be invalid
+
 In terms of compilation to a lower language, this means:
 
 ### D mode:
