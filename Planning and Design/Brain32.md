@@ -25,15 +25,18 @@ The next language up will implement functions that use working and will not expo
 
 
 
-There are 2 modes to write brain32 code:
+There are 3 modes to write brain32 code:
 - D mode
 - W mode
+- R mode
 
 This determines which type of memory is being accessed
 
 By default, all code is in D mode
 
 Any code wrapped in `{ }` is W mode
+
+Any code wrapped in `( )` is R mode (raw mode)
 
 In terms of compilation to a lower language, this means:
 
@@ -58,6 +61,9 @@ The encasing braces `{` `}` corresspond to `<<<` `>>>` respectively to move in a
 `M(x)` and `C(x)` are operatiojns that move or copy respectively the W cell into the cell in position x (0, 1, 2, 3)
 
 The pointer is pointing at a W cell
+
+### R mode
+R mode is raw mode, so R code is substituted directly into the translated brainfuck code. Raw cod eis encased in 
 
 
 # Translation
