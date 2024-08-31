@@ -7,7 +7,7 @@ pub fn translate(source : Vec<CodeBlock>) -> String {
 }
 
 
-#[derive (Clone, Copy)]
+#[derive (Clone, Copy, PartialEq, Eq)]
 enum Mode {
     Data,Working,Raw
 }
@@ -22,7 +22,15 @@ struct Instruction{
 
 fn translate_block(block : &CodeBlock) -> Vec<char> {
     let mode = block.mode;
-    block.code.iter().flat_map(|i| translate_instruction(i, mode)).collect()
+    let mut translated: Vec<char> = block.code.iter().flat_map(|i| translate_instruction(i, mode)).collect();
+
+    if mode == Mode::Working { //W blocks require wrapping in <<< code >>> to move in/out of W memory
+        let mut full = vec!['<'; 3];
+        full.append(&mut translated);
+        full.append(&mut vec!['>'; 3]);
+        return full;      
+    }
+    translated
 }
 
 fn translate_instruction(i: &Instruction, mode : Mode) -> Vec<char> {
