@@ -1,6 +1,6 @@
 mod translators;
-fn main() {
 
+fn main() {
     translators::brain32::translate(Vec::new());
     println!("Hello, world!");
 }

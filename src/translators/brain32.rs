@@ -4,16 +4,17 @@ pub fn translate(source : Vec<CodeBlock>) -> String {
 
 
 #[derive (Clone, Copy, PartialEq, Eq)]
+#[allow(dead_code)]
 pub enum Mode {
     Data,Working,Raw
 }
 pub struct CodeBlock {
-    mode : Mode,
-    code: Vec<Instruction>
+    pub mode : Mode,
+    pub code: Vec<Instruction>
 }
 pub struct Instruction{
-    parameter: u8,
-    name: char
+    pub parameter: u8,
+    pub name: char
 }
 
 fn translate_block(block : &CodeBlock) -> Vec<char> {
@@ -52,8 +53,20 @@ fn translate_instruction_data(i: &Instruction) -> Vec<char> {
     }).chars().collect()
 }
 
-fn translate_instruction_working(_i: &Instruction) -> Vec<char> {
-    String::from("").chars().collect()
+fn translate_instruction_working(i: &Instruction) -> Vec<char> {
+    String::from(
+        match i.name {
+            '+' => "+",
+            '-' => "-",
+            '[' => "[",
+            ']' => "]",
+            ',' => ",",
+            '.' => ".",
+            '>' => ">>>>",
+            '<' => "<<<<",
+            _ => ""
+        }
+    ).chars().collect()
 }
 
 
