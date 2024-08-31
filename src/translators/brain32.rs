@@ -1,5 +1,4 @@
 pub fn translate(source : Vec<CodeBlock>) -> String {
-    let result = String::new();
     source.iter().flat_map(translate_block).collect()
 }
 
@@ -53,7 +52,7 @@ fn translate_instruction_data(i: &Instruction) -> Vec<char> {
     }).chars().collect()
 }
 
-fn translate_instruction_working(i: &Instruction) -> Vec<char> {
+fn translate_instruction_working(_i: &Instruction) -> Vec<char> {
     String::from("").chars().collect()
 }
 
