@@ -18,16 +18,17 @@ struct Instruction{
     name: char
 }
 
-fn translate_character(c: char, mode : Mode) -> &str {
-    match mode {
+fn translate_character(c: char, mode : Mode) -> String {
+    (match mode {
         Mode::Data => translate_character_data,
-        Mode::Working => translate_character_working
-        Mode::Raw => |x : char| -> &str {""}
-    }(c)
+        Mode::Working => translate_character_working,
+        Mode::Raw => |x : char| -> String {String::from(x)}
+    })(c)
 }
 
-fn translate_character_data(c: char) -> &str {
-    match c {
+fn translate_character_data(c: char) -> String {
+    String::from(
+        match c {
         '+' => data_add,
         '-' => data_sub,
         '[' => data_open,
@@ -37,11 +38,11 @@ fn translate_character_data(c: char) -> &str {
         '>' => ">>>>",
         '<' => "<<<<",
         _ => ""
-    }
+    })
 }
 
-fn translate_character_working(c: char) -> &str {
-    ""
+fn translate_character_working(c: char) -> String {
+    String::from("")
 }
 
 
