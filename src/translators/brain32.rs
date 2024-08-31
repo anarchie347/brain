@@ -29,10 +29,10 @@ fn translate_character(c: char, mode : Mode) -> String {
 fn translate_character_data(c: char) -> String {
     String::from(
         match c {
-        '+' => data_add,
-        '-' => data_sub,
-        '[' => data_open,
-        ']' => data_close,
+        '+' => DATA_ADD,
+        '-' => DATA_SUB,
+        '[' => DATA_OPEN,
+        ']' => DATA_CLOSE,
         ',' => ",",
         '.' => ".",
         '>' => ">>>>",
@@ -47,7 +47,7 @@ fn translate_character_working(c: char) -> String {
 
 
 
-const data_add: &str = "a";
-const data_sub: &str = "b";
-const data_open: &str = "c";
-const data_close: &str = "d";
+const DATA_ADD: &str = "a";
+const DATA_SUB: &str = "b";
+const DATA_OPEN: &str = "c";
+const DATA_CLOSE: &str = "d";
