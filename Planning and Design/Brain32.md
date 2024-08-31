@@ -65,7 +65,9 @@ The encasing braces `{` `}` corresspond to `<<<` `>>>` respectively to move in a
 The pointer is pointing at a W cell
 
 ### R mode
-R mode is raw mode, so R code is substituted directly into the translated brainfuck code. Raw cod eis encased in 
+R mode is raw mode, so R code is substituted directly into the translated brainfuck code. Raw cod eis encased in `(` `)`
+The pointer will start at the least significant D cell, and should end in this cell. If the pointer does not end in this cell, the behaviour of the rest of the code is undefined.
+Brain32 is intended to always be compiler generated from a previous translation, so there should not be errors here. FOr debugging purposes during development, the compiler will have an option to insert a debug statement into the resulting brainfuck stating the pointer position before and after the raw code to ensure it always points to a least significant D cell at the end of the block
 
 
 # Translation
