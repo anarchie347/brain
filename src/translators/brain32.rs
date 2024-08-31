@@ -8,14 +8,14 @@ pub fn translate(source : Vec<CodeBlock>) -> String {
 
 
 #[derive (Clone, Copy, PartialEq, Eq)]
-enum Mode {
+pub enum Mode {
     Data,Working,Raw
 }
-struct CodeBlock {
+pub struct CodeBlock {
     mode : Mode,
     code: Vec<Instruction>
 }
-struct Instruction{
+pub struct Instruction{
     parameter: u8,
     name: char
 }
