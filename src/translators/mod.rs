@@ -1,1 +1,1 @@
-mod brain32;
+pub mod brain32;
