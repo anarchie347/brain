@@ -1,11 +1,13 @@
+use std::str::Chars;
+
 
 pub fn translate(source : Vec<CodeBlock>) -> String {
-
-
-    "".to_string()
+    let result = String::new();
+    source.iter().flat_map(translate_block).collect()
 }
 
 
+#[derive (Clone, Copy)]
 enum Mode {
     Data,Working,Raw
 }
@@ -18,17 +20,22 @@ struct Instruction{
     name: char
 }
 
-fn translate_character(c: char, mode : Mode) -> String {
-    (match mode {
-        Mode::Data => translate_character_data,
-        Mode::Working => translate_character_working,
-        Mode::Raw => |x : char| -> String {String::from(x)}
-    })(c)
+fn translate_block(block : &CodeBlock) -> Vec<char> {
+    let mode = block.mode;
+    block.code.iter().flat_map(|i| translate_instruction(i, mode)).collect()
 }
 
-fn translate_character_data(c: char) -> String {
+fn translate_instruction(i: &Instruction, mode : Mode) -> Vec<char> {
+    (match mode {
+        Mode::Data => translate_instruction_data,
+        Mode::Working => translate_instruction_working,
+        Mode::Raw => |x : &Instruction| -> Vec<char> {vec![x.name]}
+    })(i)
+}
+
+fn translate_instruction_data(i: &Instruction) -> Vec<char> {
     String::from(
-        match c {
+        match i.name {
         '+' => DATA_ADD,
         '-' => DATA_SUB,
         '[' => DATA_OPEN,
@@ -38,11 +45,11 @@ fn translate_character_data(c: char) -> String {
         '>' => ">>>>",
         '<' => "<<<<",
         _ => ""
-    })
+    }).chars().collect()
 }
 
-fn translate_character_working(c: char) -> String {
-    String::from("")
+fn translate_instruction_working(i: &Instruction) -> Vec<char> {
+    String::from("").chars().collect()
 }
 
 
