@@ -22,9 +22,9 @@ fn translate_block(block : &CodeBlock) -> Vec<char> {
     let mut translated: Vec<char> = block.code.iter().flat_map(|i| translate_instruction(i, mode)).collect();
 
     if mode == Mode::Working { //W blocks require wrapping in <<< code >>> to move in/out of W memory
-        let mut full = vec!['<'; 3];
+        let mut full = vec!['<'; 4];
         full.append(&mut translated);
-        full.append(&mut vec!['>'; 3]);
+        full.append(&mut vec!['>'; 4]);
         return full;      
     }
     translated
@@ -47,8 +47,8 @@ fn translate_instruction_data(i: &Instruction) -> Vec<char> {
         ']' => DATA_CLOSE,
         ',' => ",",
         '.' => ".",
-        '>' => ">>>>",
-        '<' => "<<<<",
+        '>' => ">>>>>",
+        '<' => "<<<<<",
         _ => ""
     }).chars().collect()
 }
@@ -62,8 +62,8 @@ fn translate_instruction_working(i: &Instruction) -> Vec<char> {
             ']' => "]",
             ',' => ",",
             '.' => ".",
-            '>' => ">>>>",
-            '<' => "<<<<",
+            '>' => ">>>>>",
+            '<' => "<<<<<",
             _ => ""
         }
     ).chars().collect()

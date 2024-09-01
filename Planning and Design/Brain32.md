@@ -47,18 +47,18 @@ In terms of compilation to a lower language, this means:
 
 `,` `.` only operate on the first 8bits
 
-`<` `>` are mapped to `<<<<` `>>>>`
+`<` `>` are mapped to `<<<<<` `>>>>>`
 
 `M(x)` and `C(x)` are operatiojns that move or copy respectively the cell in position x (0, 1, 2, 3) into the W cell for that block
 
 Except mid-operation, the pointer is at the rightmost, least significant cell of the 4 D cells
 
 ### W mode:
-`<` `>` are mapped to `<<<<` `>>>>`
+`<` `>` are mapped to `<<<<<` `>>>>>`
 
 All other operations work as they usually do in brainfuck, on the 8bit cell
 
-The encasing braces `{` `}` corresspond to `<<<` `>>>` respectively to move in and out of working memory.
+The encasing braces `{` `}` corresspond to `<<<<` `>>>>` respectively to move in and out of working memory.
 
 `M(x)` and `C(x)` are operatiojns that move or copy respectively the W cell into the cell in position x (0, 1, 2, 3)
 
@@ -103,24 +103,24 @@ I(DxW)(DyW) run regualar if but execute args at data cell
 
 - I(x)(y)
 
-refer to 'Ia(x)(y)' for explanation of args
+refer to 'Ia(x)(y)' for explanation of args. This code executes on W0
 ```
->>>>[-] /set next W1 to 0
->>>>[-]-  /set W2 to 255
-<<<< <<<< /move to W0
+>>>>>[-] /set next W1 to 0
+>>>>>[-]-  /set W2 to 255
+<<<<< <<<<< /move to W0
 [
     y /run else code at W0
-    >>>> /move to W1 which is 0
+    >>>>> /move to W1 which is 0
 ]
 /if val = 0, pointer at W0, else pointer at W1
->>>> /if val = 0, pointer at W1 (0), else pointer at W2 (255)
+>>>>> /if val = 0, pointer at W1 (0), else pointer at W2 (255)
 + /if val = 0, pointer at W1 (1), else pointer at W2 (0)
 [
-    <<<<
+    <<<<<
     x / execute code at W0
-    >>>> >>>> + resets W2 from 255 to 0 and exits on W2
+    >>>>> >>>>> + resets W2 from 255 to 0 and exits on W2
 ] /exits on W2
-<<<< <<<< /move back to W0 to exit
+<<<<< <<<<< /move back to W0 to exit
 ```
 
 ## D mode
