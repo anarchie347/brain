@@ -87,3 +87,23 @@ const WORKING_MOVE_TO_0: &str = "[>>>>+<<<<-]"; //all start and end in W0, move 
 const WORKING_MOVE_TO_1: &str = "[>>>+<<<-]";
 const WORKING_MOVE_TO_2: &str = "[>>+<<-]";
 const WORKING_MOVE_TO_3: &str = "[>+<-]";
+
+fn gen_if_zero_statement_working(if_zero: String, if_nonzero: String) -> String {
+    format!("
+    >>>>>[-]
+    >>>>>[-]-
+    <<<<< <<<<<
+    [
+        {}
+        >>>>>
+    ]
+    >>>>>
+    +
+    [
+        <<<<<
+        {}
+        >>>>> >>>>> +
+    ]
+    <<<<< <<<<<
+    ", if_nonzero, if_zero)
+}
