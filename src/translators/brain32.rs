@@ -78,44 +78,32 @@ const DATA_OPEN: &str = "c";
 const DATA_CLOSE: &str = "d";
 
 //move
+const DATA_MOVE_FROM_0: &str = "[<<<<+>>>>-]"; //all start and end at D0, and move to W0
+const DATA_MOVE_FROM_1: &str = "<[<<<+>>>-]>";
+const DATA_MOVE_FROM_2: &str = "<<[<<+>>-]>>";
+const DATA_MOVE_FROM_3: &str = "<<<[<+>-]>>>";
 
-//all start and end at D0, and move to W0
-const fn substitution_data_move_from(cell: u8) -> &'static str {
-    match cell {
-        0 => "[<<<<+>>>>-]",
-        1 => "<[<<<+>>>-]>",
-        2 => "<<[<<+>>-]>>",
-        3 => "<<<[<+>-]>>>",
-        _ => panic!()
-    }
-}
-//all start and end in W0, move to Dx
-const fn substitution_working_move_to(cell: u8) -> &'static str {
-    match cell {
-        0 => "[>>>>+<<<<-]",
-        1 => "[>>>+<<<-]",
-        2 => "[>>+<<-]",
-        3 => "[>+<-]",
-        _ => panic!()
-    }
-}
+const WORKING_MOVE_TO_0: &str = "[>>>>+<<<<-]"; //all start and end in W0, move to Dx
+const WORKING_MOVE_TO_1: &str = "[>>>+<<<-]";
+const WORKING_MOVE_TO_2: &str = "[>>+<<-]";
+const WORKING_MOVE_TO_3: &str = "[>+<-]";
 
-const fn substitution_if_zero_statement_working(if_zero: &'static str, if_nonzero: &str) -> &'static str {
-        ">>>>>[-]" + 
-        ">>>>>[-]-" +
-        "<<<<< <<<<<" +
-        "[" +
-        if_nonzero +
-        ">>>>>" +
-        "]" +
-        ">>>>>" +
-        "+" +
-        "[" +
-        "<<<<<" +
-        if_zero +
-        ">>>>> >>>>> +" +
-        "]" +
-        "<<<<< <<<<<"
-
-
+fn gen_if_zero_statement_working(if_zero: String, if_nonzero: String) -> String {
+    format!("
+    >>>>>[-]
+    >>>>>[-]-
+    <<<<< <<<<<
+    [
+        {}
+        >>>>>
+    ]
+    >>>>>
+    +
+    [
+        <<<<<
+        {}
+        >>>>> >>>>> +
+    ]
+    <<<<< <<<<<
+    ", if_nonzero, if_zero)
 }
