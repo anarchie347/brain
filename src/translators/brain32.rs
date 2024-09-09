@@ -89,6 +89,30 @@ const fn substitution_data_move_from(cell: u8) -> &'static str {
         _ => panic!()
     }
 }
+
+macro_rules! gen_if_zero_working {
+    ($zero:expr, $non_zero:expr) => {
+        format!(
+            ">>>>>[-]
+            >>>>>[-]-
+            <<<<< <<<<<
+            [
+                {}
+                >>>>>
+            ]
+            >>>>>
+            +
+            [
+                <<<<<
+                {}
+                >>>>> >>>>> +
+            ]
+            <<<<< <<<<<
+            "
+            ,non_zero, zero
+        )
+    };
+}
 //all start and end in W0, move to Dx
 const fn substitution_working_move_to(cell: u8) -> &'static str {
     match cell {
@@ -100,22 +124,3 @@ const fn substitution_working_move_to(cell: u8) -> &'static str {
     }
 }
 
-const fn substitution_if_zero_statement_working(if_zero: &'static str, if_nonzero: &str) -> &'static str {
-        ">>>>>[-]" + 
-        ">>>>>[-]-" +
-        "<<<<< <<<<<" +
-        "[" +
-        if_nonzero +
-        ">>>>>" +
-        "]" +
-        ">>>>>" +
-        "+" +
-        "[" +
-        "<<<<<" +
-        if_zero +
-        ">>>>> >>>>> +" +
-        "]" +
-        "<<<<< <<<<<"
-
-
-}
