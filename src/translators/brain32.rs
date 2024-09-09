@@ -82,20 +82,20 @@ const DATA_CLOSE: &str = "d";
 //all start and end at D0, and move to W0
 const fn substitution_data_move_from(cell: u8) -> &'static str {
     match cell {
-        0 => "[<<<<+>>>>-]",
-        1 => "<[<<<+>>>-]>",
-        2 => "<<[<<+>>-]>>",
-        3 => "<<<[<+>-]>>>",
+        0 => "<<<<[-]>>>>[<<<<+>>>>-]",
+        1 => "<<<<[-]>>>[<<<+>>>-]>",
+        2 => "<<<<[-]>>[<<+>>-]>>",
+        3 => "<<<<[-]>[<+>-]>>>",
         _ => panic!()
     }
 }
 //all start and end in W0, move to Dx
 const fn substitution_working_move_to(cell: u8) -> &'static str {
     match cell {
-        0 => "[>>>>+<<<<-]",
-        1 => "[>>>+<<<-]",
-        2 => "[>>+<<-]",
-        3 => "[>+<-]",
+        0 => ">>>>[-]<<<<[>>>>+<<<<-]",
+        1 => ">>>[-]<<<[>>>+<<<-]",
+        2 => ">>[-]<<[>>+<<-]",
+        3 => ">[-]<[>+<-]",
         _ => panic!()
     }
 }
