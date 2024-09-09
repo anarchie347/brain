@@ -1,4 +1,6 @@
-# New memory management
+# New memory management - Obsolete
+
+> This memory model has been ditched in favour of v3. The reason of this is the despite being more efficeint, Labelled memory introduces lots of complications relating to pointers and scopes of declaration. The efficiency improvement is not worth the extra complication, so v3 reverts to a stack and heap model
 
 The memory model used will have many similarities to a usual stack and heap model.
 
