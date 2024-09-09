@@ -20,6 +20,7 @@ The F will represent one of the following values
 - H First block of allocation
 - H Part of allocated memory
 - H free
+- H first block of allocation tagged by garbage collector
 
 Because the 'first block' state is stored in F, the first block cannot store data about the heap, so H will be unused for the first block. The 'first of tape' is required so that the pointer can be moved to the start of the tape from any unknown position
 
