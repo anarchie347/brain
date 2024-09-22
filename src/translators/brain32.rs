@@ -20,7 +20,6 @@ pub struct Instruction{
 fn translate_block(block : &CodeBlock) -> Vec<char> {
     let mode = block.mode;
     let mut translated: Vec<char> = block.code.iter().flat_map(|i| translate_instruction(i, mode)).collect();
-
     if mode == Mode::Working { //W blocks require wrapping in <<< code >>> to move in/out of W memory
         let mut full = vec!['<'; 4];
         full.append(&mut translated);
@@ -80,14 +79,12 @@ const DATA_CLOSE: &str = "d";
 //move
 
 //all start and end at D0, and move to W0
-const fn substitution_data_move_from(cell: u8) -> &'static str {
-    match cell {
-        0 => "<<<<[-]>>>>[<<<<+>>>>-]",
-        1 => "<<<<[-]>>>[<<<+>>>-]>",
-        2 => "<<<<[-]>>[<<+>>-]>>",
-        3 => "<<<<[-]>[<+>-]>>>",
-        _ => panic!()
-    }
+macro_rules! data_move_from {
+    (0) => {"<<<<[-]>>>>[<<<<+>>>>-]"};
+    (1) => {"<<<<[-]>>>[<<<+>>>-]>"};
+    (2) => {"<<<<[-]>>[<<+>>-]>>"};
+    (3) => {"<<<<[-]>[<+>-]>>>"};
+    ($x:expr) => {compile_error!("arg must be 0,1,2 or 3")};
 }
 
 macro_rules! gen_if_zero_working {
@@ -112,13 +109,11 @@ macro_rules! gen_if_zero_working {
     };
 }
 //all start and end in W0, move to Dx
-const fn substitution_working_move_to(cell: u8) -> &'static str {
-    match cell {
-        0 => ">>>>[-]<<<<[>>>>+<<<<-]",
-        1 => ">>>[-]<<<[>>>+<<<-]",
-        2 => ">>[-]<<[>>+<<-]",
-        3 => ">[-]<[>+<-]",
-        _ => panic!()
-    }
+macro_rules! working_move_to {
+    (0) => {">>>>[-]<<<<[>>>>+<<<<-]"};
+    (1) => {">>>[-]<<<[>>>+<<<-]"};
+    (2) => {">>[-]<<[>>+<<-]"};
+    (3) => {">[-]<[>+<-]"};
+    ($x:expr) => {compile_error!("arg must be 0,1,2 or 3")};
 }
 
