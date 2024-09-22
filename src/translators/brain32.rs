@@ -91,27 +91,24 @@ const fn substitution_data_move_from(cell: u8) -> &'static str {
 }
 
 macro_rules! gen_if_zero_working {
-    //use concat rather than format for compile time computtion
     ($zero:expr, $non_zero:expr) => {
-        format!(
-            ">>>>>[-]
-            >>>>>[-]-
-            <<<<< <<<<<
-            [
-                {}
-                >>>>>
-            ]
-            >>>>>
-            +
-            [
-                <<<<<
-                {}
-                >>>>> >>>>> +
-            ]
-            <<<<< <<<<<
-            "
-            ,non_zero, zero
-        )
+        concat!(
+            ">>>>>[-]",
+            ">>>>>[-]-",
+            "<<<<< <<<<<",
+            "[",
+                non_zero,
+                ">>>>>",
+            "]",
+            ">>>>>",
+            "+",
+            "[",
+                "<<<<<",
+                zero,
+                ">>>>> >>>>> +",
+            "]",
+            "<<<<< <<<<<",
+        );
     };
 }
 //all start and end in W0, move to Dx
