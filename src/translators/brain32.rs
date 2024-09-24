@@ -88,7 +88,17 @@ const DATA_ADD: &str = concat!(
         ""
     )
 );
-const DATA_SUB: &str = concat!();
+const DATA_SUB: &str = concat!(
+    data_if_zero!(
+        0,
+        concat!(
+            data_if_zero!(1, concat!(data_if_zero!(2, "<<<->>>", ""), "<<->>"), ""),
+            "<->"
+        ),
+        ""
+    ),
+    "-"
+);
 const DATA_OPEN: &str = "c";
 const DATA_CLOSE: &str = "d";
 
