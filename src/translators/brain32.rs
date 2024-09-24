@@ -136,7 +136,7 @@ macro_rules! data_move_from {
             "+",
             ptr_move_to_data!(offset),
             "-]"
-            ptr_move_to_working(offset),
+            ptr_move_to_working!(offset),
             ">>>>" // go to D0
         )
     };
@@ -157,13 +157,13 @@ macro_rules! data_copy_from {
             ">>>>>+<<<<<"
             ptr_move_to_data!(offset),
             "-]", //moves to W0 and W1
-            ptr_move_to_working(offset),
+            ptr_move_to_working!(offset),
             ">>>>>",
             "[",
             "<<<<<",
-            ptr_move_to_data(offset),
+            ptr_move_to_data!(offset),
             "+",
-            ptr_move_to_working(offset),
+            ptr_move_to_working!(offset),
             ">>>>>-",
             "]" //moves from W1 back to Dx
             "<" //go from W1 to D0
@@ -176,11 +176,11 @@ macro_rules! working_move_to {
     ($offset:expr) => {
         concat!(
             ZERO,
-            ptr_move_to_working(offset),
+            ptr_move_to_working!(offset),
             "[",
-            ptr_move_to_data(offset),
+            ptr_move_to_data!(offset),
             "+",
-            ptr_move_to_working(offset),
+            ptr_move_to_working!(offset),
             "-]",
             ">>>>" //go to W0
         )
@@ -198,9 +198,9 @@ macro_rules! working_copy_to {
             "<<<<" //go to W0
             "[",
             ">>>>>+<<<<<"
-            ptr_move_to_data(offset),
+            ptr_move_to_data!(offset),
             "+",
-            ptr_move_to_working(offset),
+            ptr_move_to_working!(offset),
             "]", //moves to W1 and Dx
             ">>>>>",
             "[<<<<<+>>>>>-]" //moves W1 to W0, finishes W1
@@ -234,8 +234,13 @@ macro_rules! working_if_zero {
     };
 }
 
+//args executed at D0
 macro_rules! data_if_zero {
-    ($offset:expr) => {
-        concat!(data_copy_from(offset),)
+    ($offset:expr, $zero:expr, $non_zero:expr) => {
+        concat!(
+            data_copy_from!(offset),
+            working_if_zero!(zero, non_zero),
+
+        )
     };
 }
