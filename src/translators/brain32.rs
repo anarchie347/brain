@@ -121,22 +121,6 @@ macro_rules! ptr_move_to_working {
     };
 }
 
-//all start and end at D0, and move to W0
-macro_rules! data_move_from {
-    ($offset:expr) => {
-        concat!(
-            ptr_move_to_working!(offset),
-            ZERO,
-            ptr_move_to_data!(offset),
-            "[",
-            ptr_move_to_working!(offset),
-            "+",
-            ptr_move_to_data!(offset),
-            "-]"
-        )
-    }
-}
-
 macro_rules! _if_zero_working {
     ($zero:expr, $non_zero:expr) => {
         concat!(
@@ -158,6 +142,51 @@ macro_rules! _if_zero_working {
         );
     };
 }
+
+//all start and end at D0, and move to W0
+macro_rules! data_move_from {
+    ($offset:expr) => {
+        concat!(
+            ptr_move_to_working!(offset),
+            ZERO,
+            ptr_move_to_data!(offset),
+            "[",
+            ptr_move_to_working!(offset),
+            "+",
+            ptr_move_to_data!(offset),
+            "-]"
+        )
+    };
+}
+
+macro_rules! data_copy_from {
+    ($offset:expr) => {
+        concat!(
+            ptr_move_to_working!(offset),
+            ZERO,
+            ">>>>>",
+            ZERO,
+            "<<<<<"
+            ptr_move_to_data!(offset),
+            "[",
+            ptr_move_to_working!(offset),
+            "+",
+            ">>>>>+<<<<<"
+            ptr_move_to_data!(offset),
+            "-]", //moves to W0 and W1
+            ptr_move_to_working(offset),
+            ">>>>>",
+            "[",
+            "<<<<<",
+            ptr_move_to_data(offset),
+            "+",
+            ptr_move_to_working(offset),
+            ">>>>>-",
+            "]" //moves from W1 back to Dx
+        )
+    }
+}
+
 //all start and end in W0, move to Dx
 macro_rules! working_move_to {
     ($offset:expr) => {
@@ -170,6 +199,27 @@ macro_rules! working_move_to {
             "+",
             ptr_move_to_working(offset),
             "-]"
+        )
+    };
+}
+
+macro_rules! working_copy_to {
+    ($offset:expr) => {
+        concat!(
+            ">>>>>",
+            ZERO,
+            "<<<<<",
+            ptr_move_to_data(offset),
+            ZERO,
+            ptr_move_to_working(offset),
+            "[",
+            ">>>>>+<<<<<"
+            ptr_move_to_data(offset),
+            "+",
+            ptr_move_to_working(offset),
+            "]", //moves to W1 and Dx
+            ">>>>>",
+            "[<<<<<+>>>>>-]" //moves W1 to W0
         )
     };
 }
