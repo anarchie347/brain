@@ -158,6 +158,7 @@ I0(
     )()
     ->
 )()
+-
 ```
 THis works in a similar vein to addition, but the zero check has to be done before the subtraction
 
