@@ -72,6 +72,8 @@ Brain32 is intended to always be compiler generated from a previous translation,
 
 # Translation
 
+The following translations are not entirely accurate to the actual implementation as issues were realised with these algorithms during implementation. Refer to source code for the algorithms
+
 ## cell descriptions:
 
 Wx refers to a working cell, where x is the index. The current cell block is index 0

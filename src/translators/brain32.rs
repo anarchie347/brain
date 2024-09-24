@@ -88,7 +88,7 @@ const DATA_ADD: &str = concat!(
         ""
     )
 );
-const DATA_SUB: &str = "b";
+const DATA_SUB: &str = concat!();
 const DATA_OPEN: &str = "c";
 const DATA_CLOSE: &str = "d";
 
