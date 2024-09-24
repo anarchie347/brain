@@ -4,7 +4,7 @@ possible replacement for Brainsplit and Braincds
 
 Brain32 segments memory as the following:
 
-W D D D | W D D D D | W D D D D
+W D D D D | W D D D D | W D D D D
 
 W - Working
 D - data
