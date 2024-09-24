@@ -80,11 +80,11 @@ fn translate_instruction_working(i: &Instruction) -> Vec<char> {
 const DATA_ADD: &str = concat!(
     "+",
     data_if_zero!(
-        0, "",
-        // concat!(
-        //     "<+>",
-        //     data_if_zero!(1, concat!("<<+>>", data_if_zero!(2, "<<<+>>>", "")), "")
-        // ),
+        0,
+        concat!(
+            "<+>",
+            data_if_zero!(1, concat!("<<+>>", data_if_zero!(2, "<<<+>>>", "")), "")
+        ),
         ""
     )
 );
@@ -108,9 +108,6 @@ macro_rules! ptr_move_to_working {
     (3) => {
         ">"
     };
-    ($x:expr) => {
-        compile_error!("arg must be 0,1,2 or 3")
-    };
 }
 use crate::ptr_move_to_data;
 #[macro_export]
@@ -127,9 +124,6 @@ macro_rules! ptr_move_to_data {
     (3) => {
         "<"
     };
-    ($x:expr) => {
-        compile_error!("arg must be 0,1,2 or 3")
-    };
 }
 
 //----------------------the below macros assume the pointer position is W0 at the start, and will return the pointer to W0
@@ -139,7 +133,7 @@ macro_rules! ptr_move_to_data {
 use crate::data_move_from;
 #[macro_export]
 macro_rules! data_move_from {
-    ($offset:expr) => {
+    ($offset:tt) => {
         concat!(
             "<<<<", //go to W0
             "[-]", //Zero W0
@@ -158,7 +152,7 @@ macro_rules! data_move_from {
 use crate::data_copy_from;
 #[macro_export]
 macro_rules! data_copy_from {
-    ($offset:expr) => {
+    ($offset:tt) => {
         concat!(
             "<<<<", //go to W0
             "[-]",
@@ -190,7 +184,7 @@ macro_rules! data_copy_from {
 use crate::working_move_to;
 #[macro_export]
 macro_rules! working_move_to {
-    ($offset:expr) => {
+    ($offset:tt) => {
         concat!(
             "[-]",
             ptr_move_to_working!($offset),
@@ -208,7 +202,7 @@ macro_rules! working_move_to {
 use crate::working_copy_to;
 #[macro_export]
 macro_rules! working_copy_to {
-    ($offset:expr) => {
+    ($offset:tt) => {
         concat!(
             ">",
             "[-]",
@@ -232,7 +226,7 @@ macro_rules! working_copy_to {
 use crate::working_if_zero;
 #[macro_export]
 macro_rules! working_if_zero {
-    ($zero:literal, $non_zero:literal) => {
+    ($zero:expr, $non_zero:expr) => {
         concat!(
             "<<<<",      //go to W0
             ">>>>>[-]",  //Zero W1
@@ -251,7 +245,7 @@ macro_rules! working_if_zero {
             "> >>>>> +", //go to W1 from D0, increment
             "]",
             "<<<<< <", //go to D0 from W2
-        );
+        )
     };
 }
 
@@ -259,7 +253,7 @@ macro_rules! working_if_zero {
 use crate::data_if_zero;
 #[macro_export]
 macro_rules! data_if_zero {
-    ($offset:expr, $zero:expr, $non_zero:expr) => {
-        concat!(data_copy_from!($offset), working_if_zero!($zero, $non_zero),)
+    ($offset:tt, $zero:expr, $non_zero:expr) => {
+        concat!(data_copy_from!($offset), working_if_zero!($zero, $non_zero))
     };
 }
