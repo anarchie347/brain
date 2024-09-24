@@ -86,7 +86,7 @@ const ZERO: &str = "[-]";
 
 //move
 
-macro_rules! ptr_move_to_data {
+macro_rules! ptr_move_to_working {
     (0) => {
         ">>>>"
     };
@@ -103,7 +103,7 @@ macro_rules! ptr_move_to_data {
         compile_error!("arg must be 0,1,2 or 3")
     };
 }
-macro_rules! ptr_move_to_working {
+macro_rules! ptr_move_to_data {
     (0) => {
         "<<<<"
     };
@@ -121,33 +121,14 @@ macro_rules! ptr_move_to_working {
     };
 }
 
-macro_rules! _if_zero_working {
-    ($zero:expr, $non_zero:expr) => {
-        concat!(
-            ">>>>>[-]",
-            ">>>>>[-]-",
-            "<<<<< <<<<<",
-            "[",
-            non_zero,
-            ">>>>>",
-            "]",
-            ">>>>>",
-            "+",
-            "[",
-            "<<<<<",
-            zero,
-            ">>>>> >>>>> +",
-            "]",
-            "<<<<< <<<<<",
-        );
-    };
-}
+//----------------------the below macros assume the pointer position is W0 at the start, and will return the pointer to W0
+//except i havent actually made this the case yet
 
-//all start and end at D0, and move to W0
+//move Dx to W0
 macro_rules! data_move_from {
     ($offset:expr) => {
         concat!(
-            ptr_move_to_working!(offset),
+            "<<<<", //go to W0
             ZERO,
             ptr_move_to_data!(offset),
             "[",
@@ -155,14 +136,16 @@ macro_rules! data_move_from {
             "+",
             ptr_move_to_data!(offset),
             "-]"
+            ptr_move_to_working(offset),
+            ">>>>" // go to D0
         )
     };
 }
-
+//copy Dx to W0
 macro_rules! data_copy_from {
     ($offset:expr) => {
         concat!(
-            ptr_move_to_working!(offset),
+            "<<<<", //go to W0
             ZERO,
             ">>>>>",
             ZERO,
@@ -183,35 +166,36 @@ macro_rules! data_copy_from {
             ptr_move_to_working(offset),
             ">>>>>-",
             "]" //moves from W1 back to Dx
+            "<" //go from W1 to D0
         )
     }
 }
 
-//all start and end in W0, move to Dx
+//move W0 to Dx
 macro_rules! working_move_to {
     ($offset:expr) => {
         concat!(
-            ptr_move_to_data(offset),
             ZERO,
             ptr_move_to_working(offset),
             "[",
             ptr_move_to_data(offset),
             "+",
             ptr_move_to_working(offset),
-            "-]"
+            "-]",
+            ">>>>" //go to W0
         )
     };
 }
 
+//copy W0 to Dx
 macro_rules! working_copy_to {
     ($offset:expr) => {
         concat!(
-            ">>>>>",
+            ">",
             ZERO,
-            "<<<<<",
-            ptr_move_to_data(offset),
-            ZERO,
-            ptr_move_to_working(offset),
+            "<", //Zero W1, go to D0
+            ZERO, //Zero D0
+            "<<<<" //go to W0
             "[",
             ">>>>>+<<<<<"
             ptr_move_to_data(offset),
@@ -219,7 +203,39 @@ macro_rules! working_copy_to {
             ptr_move_to_working(offset),
             "]", //moves to W1 and Dx
             ">>>>>",
-            "[<<<<<+>>>>>-]" //moves W1 to W0
+            "[<<<<<+>>>>>-]" //moves W1 to W0, finishes W1
+            "<" //go to D0
         )
+    };
+}
+
+//if statement applied on W0, args execeuted at D0
+macro_rules! working_if_zero {
+    ($zero:expr, $non_zero:expr) => {
+        concat!(
+            "<<<<" //go to W0
+            ">>>>>[-]", //Zero W1
+            ">>>>>[-]-", //W2=255
+            "<<<<< <<<<<",
+            "[",
+            ">>>>", //go to D0
+            non_zero,
+            ">", //go to W1
+            "]",
+            ">>>>>",
+            "+",
+            "[",
+            "<", //go to D0 from W1
+            zero,
+            "> >>>>> +", //go to W1 from D0, increment
+            "]",
+            "<<<<< <", //go to D0 from W2
+        );
+    };
+}
+
+macro_rules! data_if_zero {
+    ($offset:expr) => {
+        concat!(data_copy_from(offset),)
     };
 }
