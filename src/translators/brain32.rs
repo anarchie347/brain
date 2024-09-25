@@ -99,8 +99,21 @@ const DATA_SUB: &str = concat!(
     ),
     "-"
 );
-const DATA_OPEN: &str = "c";
-const DATA_CLOSE: &str = "d";
+
+const DATA_OPEN: &str = concat!(
+    data_zero_count_single_from!(0),
+    data_zero_count_single_from!(1),
+    data_zero_count_single_from!(2),
+    data_zero_count_single_from!(3), //count 0s in W1
+    ">[<",                           //go to W1
+);
+const DATA_CLOSE: &str = concat!(
+    data_zero_count_single_from!(0),
+    data_zero_count_single_from!(1),
+    data_zero_count_single_from!(2),
+    data_zero_count_single_from!(3), //count 0s in W1
+    ">]<",                           //go to W1
+);
 
 //move
 use crate::ptr_move_to_working;
@@ -265,5 +278,25 @@ use crate::data_if_zero;
 macro_rules! data_if_zero {
     ($offset:tt, $zero:expr, $non_zero:expr) => {
         concat!(data_copy_from!($offset), working_if_zero!($zero, $non_zero))
+    };
+}
+
+use crate::data_zero_count_single_from;
+#[macro_export]
+macro_rules! data_zero_count_single_from {
+    ($offset:tt) => {
+        concat!(
+            data_copy_from!($offset),
+            "<<<<",
+            ptr_move_to_data!($offset), //go to Dx
+            "[",
+            ptr_move_to_data!($offset),
+            ">>>>>+<<<<<", //increment W1
+            ptr_move_to_working!($offset),
+            "[-]", //zero Dx
+            ptr_move_to_data!($offset),
+            ">>>>",                    //go back to D0
+            working_move_to!($offset), //move W0 to Dx
+        )
     };
 }
