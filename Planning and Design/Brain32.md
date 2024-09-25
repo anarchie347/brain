@@ -166,22 +166,25 @@ THis works in a similar vein to addition, but the zero check has to be done befo
 
 `[`
 ```
-<<<<[-]>>>> /zero W0
-[>+<-] /copy to W1
-[<<<<+>>>>[-]] /if D0 not zero, increment W0, zero D0 to exit loop
->[<+>-]< /move W1 back into D0
-
-Repeat process for other D cells, so that W0 stores the number of not-zeroes encountered, so if W0 is 0, then D is 0
-
-position pointer at W0 cell
-[>>>> /test for 0 on W0 cell, then move to D0
+Copy Dx to W0
+Go to Dx
+[
+    Go to W1
+    +
+    Go to Dx
+    [-] // set Dx to 0
+]
+Move W0 to Dx
+Repeat for x=0,1,2,3. This sets W1 to a counter for amount of 0s, so if W1 is 0, D is 0
+Go to W1
+[< //open a bracket, go back to D0
 ```
 
 `]`
 ```
-same process as '[' to set W0 to 0 if D is 0, else W0 != 0
-position pointer at W0 cell
-]>>>> move pointer back to D0
+same process as '[' to set W1 to 0 if D is 0, else W0 != 0
+position pointer at W1 cell
+]< //close bracket on W1, move back to D0
 ```
 
 all other mappins for D mode and all for W mode are either trivial, or no change is required
