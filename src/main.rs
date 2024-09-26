@@ -1,6 +1,6 @@
 use std::{env, io::Write};
 
-use translators::brain32::{CodeBlock, Instruction, Mode};
+use translators::brain32::{CodeBlock, Mode, Token};
 
 mod translators;
 
@@ -8,22 +8,14 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     //let c = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
     //let c = "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.+.-.";
-    let c = "+";
-    let block = CodeBlock {
-        mode: Mode::Data,
-        code: c
-            .chars()
-            .map(|c| Instruction {
-                parameter: 0,
-                name: c,
-            })
-            .collect(),
-    };
-    let mut v: Vec<CodeBlock> = Vec::new();
-    v.push(block);
-    let s = translators::brain32::translate(v);
-    write_to_file(&s, &args[1]);
-    println!("{}", s);
+    let source = "+";
+
+    let mut source_vec: Vec<(Mode, String)> = Vec::new();
+    source_vec.push((Mode::Data, source.to_string()));
+    let parsed = translators::brain32::parse(source_vec);
+    let brainfuck = translators::brain32::translate(parsed);
+    write_to_file(&brainfuck, &args[1]);
+    println!("{}", brainfuck);
 }
 
 fn write_to_file(s: &String, path: &String) {

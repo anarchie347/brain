@@ -5,6 +5,20 @@ pub fn translate(source: Vec<CodeBlock>) -> String {
     full.iter().collect()
 }
 
+pub fn parse(source: Vec<(Mode, String)>) -> Vec<CodeBlock> {
+    source
+        .iter()
+        .map(|(mode, section)| CodeBlock {
+            mode: *mode,
+            code: parse_section(section),
+        })
+        .collect()
+}
+
+fn parse_section(section: &String) -> Vec<Token> {
+    section.chars().map(|c| Token::parse(&c)).collect()
+}
+
 #[derive(Clone, Copy, PartialEq, Eq)]
 #[allow(dead_code)]
 pub enum Mode {
@@ -14,11 +28,33 @@ pub enum Mode {
 }
 pub struct CodeBlock {
     pub mode: Mode,
-    pub code: Vec<Instruction>,
+    pub code: Vec<Token>,
 }
-pub struct Instruction {
-    pub parameter: u8,
-    pub name: char,
+pub enum Token {
+    Plus,
+    Minus,
+    Open,
+    Close,
+    Comma,
+    Dot,
+    Right,
+    Left,
+    Preserve(char),
+}
+impl Token {
+    fn parse(c: &char) -> Token {
+        match c {
+            '+' => Token::Plus,
+            '-' => Token::Minus,
+            '[' => Token::Open,
+            ']' => Token::Close,
+            ',' => Token::Comma,
+            '.' => Token::Dot,
+            '>' => Token::Right,
+            '<' => Token::Left,
+            x => Token::Preserve(*x),
+        }
+    }
 }
 
 fn translate_block(block: &CodeBlock) -> Vec<char> {
@@ -38,42 +74,58 @@ fn translate_block(block: &CodeBlock) -> Vec<char> {
     translated
 }
 
-fn translate_instruction(i: &Instruction, mode: Mode) -> Vec<char> {
+fn translate_instruction(t: &Token, mode: Mode) -> Vec<char> {
     (match mode {
-        Mode::Data => translate_instruction_data,
-        Mode::Working => translate_instruction_working,
-        Mode::Raw => |x: &Instruction| -> Vec<char> { vec![x.name] },
-    })(i)
+        Mode::Data => translate_token_data,
+        Mode::Working => translate_token_working,
+        Mode::Raw => translate_token_raw,
+    })(t)
 }
 
-fn translate_instruction_data(i: &Instruction) -> Vec<char> {
-    String::from(match i.name {
-        '+' => DATA_ADD,
-        '-' => DATA_SUB,
-        '[' => DATA_OPEN,
-        ']' => DATA_CLOSE,
-        ',' => ",",
-        '.' => ".",
-        '>' => ">>>>>",
-        '<' => "<<<<<",
-        _ => "",
-    })
+fn translate_token_data(t: &Token) -> Vec<char> {
+    match t {
+        Token::Plus => String::from(DATA_ADD),
+        Token::Minus => String::from(DATA_SUB),
+        Token::Open => String::from(DATA_OPEN),
+        Token::Close => String::from(DATA_CLOSE),
+        Token::Comma => String::from(","),
+        Token::Dot => String::from("."),
+        Token::Right => String::from(">>>>>"),
+        Token::Left => String::from("<<<<<"),
+        Token::Preserve(x) => x.to_string(),
+    }
     .chars()
     .collect()
 }
 
-fn translate_instruction_working(i: &Instruction) -> Vec<char> {
-    String::from(match i.name {
-        '+' => "+",
-        '-' => "-",
-        '[' => "[",
-        ']' => "]",
-        ',' => ",",
-        '.' => ".",
-        '>' => ">>>>>",
-        '<' => "<<<<<",
-        _ => "",
-    })
+fn translate_token_working(t: &Token) -> Vec<char> {
+    match t {
+        Token::Plus => String::from("+"),
+        Token::Minus => String::from("-"),
+        Token::Open => String::from("["),
+        Token::Close => String::from("]"),
+        Token::Comma => String::from(","),
+        Token::Dot => String::from("."),
+        Token::Right => String::from(">>>>>"),
+        Token::Left => String::from("<<<<<"),
+        Token::Preserve(x) => x.to_string(),
+    }
+    .chars()
+    .collect()
+}
+
+fn translate_token_raw(t: &Token) -> Vec<char> {
+    match t {
+        Token::Plus => String::from("+"),
+        Token::Minus => String::from("-"),
+        Token::Open => String::from("["),
+        Token::Close => String::from("]"),
+        Token::Comma => String::from(","),
+        Token::Dot => String::from("."),
+        Token::Right => String::from(">"),
+        Token::Left => String::from("<"),
+        Token::Preserve(x) => x.to_string(),
+    }
     .chars()
     .collect()
 }
@@ -117,6 +169,9 @@ const DATA_CLOSE: &str = concat!(
     data_zero_count_single_from!(3), //count 0s in W1
     ">]<",                           //go to W1
 );
+
+use std::fs::OpenOptions;
+use std::ops::Index;
 
 //move
 use crate::ptr_move_working_to_data;

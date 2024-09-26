@@ -32,13 +32,9 @@ There are 3 modes to write brain32 code:
 
 This determines which type of memory is being accessed
 
-By default, all code is in D mode
+Brain32 code is not meant to be human-written, so its compiler will not contain a complete parser, and will expect an array, where each element is some brain32 code, and a value to state the mode. So there is no written way to set the mode
 
-Any code wrapped in `{ }` is W mode
-
-Any code wrapped in `( )` is R mode (raw mode)
-
-Modes cannot be wrapped inside each other, so `{{}}` or `{()}` would be invalid
+The pointer default position within a memory block is the rightmost D cell, so the entire source code is wrapped with `>>>>` and `<<<<` to get to this location
 
 In terms of compilation to a lower language, this means:
 
@@ -58,14 +54,14 @@ Except mid-operation, the pointer is at the rightmost, least significant cell of
 
 All other operations work as they usually do in brainfuck, on the 8bit cell
 
-The encasing braces `{` `}` corresspond to `<<<<` `>>>>` respectively to move in and out of working memory.
+At the start and end of the block, `<<<<` and `>>>>` must be added respectively to move in and out of W memory
 
 `M(x)` and `C(x)` are operatiojns that move or copy respectively the W cell into the cell in position x (0, 1, 2, 3)
 
 The pointer is pointing at a W cell
 
 ### R mode
-R mode is raw mode, so R code is substituted directly into the translated brainfuck code. Raw cod eis encased in `(` `)`
+R mode is raw mode, so R code is substituted directly into the translated brainfuck code.
 The pointer will start at the least significant D cell, and should end in this cell. If the pointer does not end in this cell, the behaviour of the rest of the code is undefined.
 Brain32 is intended to always be compiler generated from a previous translation, so there should not be errors here. FOr debugging purposes during development, the compiler will have an option to insert a debug statement into the resulting brainfuck stating the pointer position before and after the raw code to ensure it always points to a least significant D cell at the end of the block
 
