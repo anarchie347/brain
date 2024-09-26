@@ -5,7 +5,7 @@ use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifier
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode};
 use std::io::Write;
 use std::time::Duration;
-use std::{env, fs, io};
+use std::{env, fs, io, mem};
 
 pub fn run(brainfuck: &String) {
     let source = brainfuck.as_bytes();
@@ -77,6 +77,28 @@ fn execute(
                 }
             },
             b'?' => println!("CELL[{}] VAL: {}", pointer, mem_tape[pointer]), //for debugging purposes
+            b'#' => {
+                let val32bit = mem_tape[pointer] as u32
+                    + 256 * mem_tape[pointer - 1] as u32
+                    + 65536 * mem_tape[pointer - 2] as u32
+                    + 16777216 * mem_tape[pointer - 3] as u32;
+                println!(
+                    "BLOCK[{}] VAL: {} W:{}",
+                    (pointer - 4) / 5,
+                    val32bit,
+                    mem_tape[pointer - 4]
+                )
+            }
+            b'@' => {
+                println!(
+                    "W0 {} | D3 {} | D2 {} | D1 {} | D0 {}",
+                    mem_tape[pointer - 4],
+                    mem_tape[pointer - 3],
+                    mem_tape[pointer - 2],
+                    mem_tape[pointer - 1],
+                    mem_tape[pointer]
+                )
+            }
             _ => (),
         }
         code_index += 1;

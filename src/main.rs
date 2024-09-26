@@ -10,7 +10,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     //let source = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
     //let source = "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.+.-.";
-    let source = "+?";
+    let source = "+#@";
 
     let mut source_vec: Vec<(Mode, String)> = Vec::new();
     source_vec.push((Mode::Data, source.to_string()));
