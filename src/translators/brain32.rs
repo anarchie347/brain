@@ -119,9 +119,9 @@ const DATA_CLOSE: &str = concat!(
 );
 
 //move
-use crate::ptr_move_to_working;
+use crate::ptr_move_working_to_data;
 #[macro_export]
-macro_rules! ptr_move_to_working {
+macro_rules! ptr_move_working_to_data {
     (0) => {
         ">>>>"
     };
@@ -135,9 +135,9 @@ macro_rules! ptr_move_to_working {
         ">"
     };
 }
-use crate::ptr_move_to_data;
+use crate::ptr_move_data_to_working;
 #[macro_export]
-macro_rules! ptr_move_to_data {
+macro_rules! ptr_move_data_to_working {
     (0) => {
         "<<<<"
     };
@@ -152,32 +152,65 @@ macro_rules! ptr_move_to_data {
     };
 }
 
+use crate::ptr_move_D0_to_data;
+#[macro_export]
+macro_rules! ptr_move_D0_to_data {
+    (0) => {
+        ""
+    };
+    (1) => {
+        "<"
+    };
+    (2) => {
+        "<<"
+    };
+    (3) => {
+        "<<<"
+    };
+}
+
+use crate::ptr_move_data_to_D0;
+#[macro_export]
+macro_rules! ptr_move_data_to_D0 {
+    (0) => {
+        ""
+    };
+    (1) => {
+        ">"
+    };
+    (2) => {
+        ">>"
+    };
+    (3) => {
+        ">>>"
+    };
+}
+
 //----------------------the below macros assume the pointer position is W0 at the start, and will return the pointer to W0
 //except i havent actually made this the case yet
 
 //move Dx to W0
-use crate::data_move_from;
+use crate::data_move_to_working;
 #[macro_export]
-macro_rules! data_move_from {
+macro_rules! data_move_to_working {
     ($offset:tt) => {
         concat!(
             "<<<<", //go to W0
             "[-]", //Zero W0
-            ptr_move_to_data!($offset),
+            ptr_move_working_to_data!($offset),
             "[",
-            ptr_move_to_working!($offset),
+            ptr_move_data_to_working!($offset),
             "+",
-            ptr_move_to_data!($offset),
+            ptr_move_working_to_data!($offset),
             "-]"
-            ptr_move_to_working!($offset),
-            ">>>>" // go to D0
+            ptr_move_data_to_D0!($offset),
         )
     };
 }
 //copy Dx to W0
-use crate::data_copy_from;
+use crate::data_copy_to_working;
 #[macro_export]
-macro_rules! data_copy_from {
+macro_rules! data_copy_to_working {
     ($offset:tt) => {
         concat!(
             "<<<<", //go to W0
@@ -185,20 +218,20 @@ macro_rules! data_copy_from {
             ">>>>>",
             "[-]",
             "<<<<<", //zero W0, W1, end in W0
-            ptr_move_to_data!($offset),
+            ptr_move_working_to_data!($offset),
             "[",
-            ptr_move_to_working!($offset),
+            ptr_move_data_to_working!($offset),
             "+",
             ">>>>>+<<<<<",
-            ptr_move_to_data!($offset),
+            ptr_move_working_to_data!($offset),
             "-]", //moves to W0 and W1
-            ptr_move_to_working!($offset),
-            ">>>>>",
+            ptr_move_data_to_working!($offset),
+            ">>>>>", //go W1
             "[",
             "<<<<<",
-            ptr_move_to_data!($offset),
+            ptr_move_working_to_data!($offset),
             "+",
-            ptr_move_to_working!($offset),
+            ptr_move_data_to_working!($offset),
             ">>>>>-",
             "]", //moves from W1 back to Dx
             "<"  //go from W1 to D0
@@ -207,39 +240,42 @@ macro_rules! data_copy_from {
 }
 
 //move W0 to Dx
-use crate::working_move_to;
+use crate::working_move_to_data;
 #[macro_export]
-macro_rules! working_move_to {
+macro_rules! working_move_to_data {
     ($offset:tt) => {
         concat!(
+            ptr_move_D0_to_data!($offset),
             "[-]",
-            ptr_move_to_working!($offset),
+            ptr_move_data_to_working!($offset),
             "[",
-            ptr_move_to_data!($offset),
+            ptr_move_working_to_data!($offset),
             "+",
-            ptr_move_to_working!($offset),
+            ptr_move_data_to_working!($offset),
             "-]",
-            ">>>>" //go to W0
+            ">>>>" //go to D0
         )
     };
 }
 
 //copy W0 to Dx
-use crate::working_copy_to;
+use crate::working_copy_to_data;
 #[macro_export]
-macro_rules! working_copy_to {
+macro_rules! working_copy_to_data {
     ($offset:tt) => {
         concat!(
             ">",
             "[-]",
             "<", //Zero W1, go to D0
-            "[-]", //Zero D0
-            "<<<<" //go to W0
+            ptr_move_D0_to_data!($offset),
+            "[-]", //Zero Dx
+            ptr_move_data_to_working($offset),
             "[",
-            ">>>>>+<<<<<"
-            ptr_move_to_data!($offset),
+            ">>>>>+<<<<<", //increment W1
+            ptr_move_working_to_data!($offset),
             "+",
-            ptr_move_to_working!($offset),
+            ptr_move_data_to_working!($offset),
+            "-",
             "]", //moves to W1 and Dx
             ">>>>>",
             "[<<<<<+>>>>>-]" //moves W1 to W0, finishes W1
@@ -280,7 +316,10 @@ use crate::data_if_zero;
 #[macro_export]
 macro_rules! data_if_zero {
     ($offset:tt, $zero:expr, $non_zero:expr) => {
-        concat!(data_copy_from!($offset), working_if_zero!($zero, $non_zero))
+        concat!(
+            data_copy_to_working!($offset),
+            working_if_zero!($zero, $non_zero)
+        )
     };
 }
 
@@ -289,17 +328,15 @@ use crate::data_zero_count_single_from;
 macro_rules! data_zero_count_single_from {
     ($offset:tt) => {
         concat!(
-            data_copy_from!($offset),
-            "<<<<",
-            ptr_move_to_data!($offset), //go to Dx
+            data_copy_to_working!($offset),
+            ptr_move_D0_to_data!($offset),
             "[",
-            ptr_move_to_data!($offset),
-            ">>>>>+<<<<<", //increment W1
-            ptr_move_to_working!($offset),
-            "[-]", //zero Dx
-            ptr_move_to_data!($offset),
-            ">>>>",                    //go back to D0
-            working_move_to!($offset), //move W0 to Dx
+            ptr_move_data_to_D0!($offset),
+            ">+<", //increment W1
+            ptr_move_D0_to_data!($offset),
+            "[-]]", //zero Dx, exit loop
+            ptr_move_data_to_D0!($offset),
+            working_move_to_data!($offset), //move W0 to Dx
         )
     };
 }
