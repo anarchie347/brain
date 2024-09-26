@@ -1,4 +1,6 @@
-//use core::fmt;
+//based on https://github.com/anarchie347/rusty-bf-interpreter
+//adapted for this specific use case with addition of debug symbols for development and testing of the compiler
+
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode};
 use std::io::Write;
