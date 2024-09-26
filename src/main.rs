@@ -14,6 +14,7 @@ fn main() {
     let source = read_from_file(&String::from("in.txt"));
 
     let mut source_vec: Vec<(Mode, String)> = Vec::new();
+    source_vec.push((Mode::Raw, String::from_utf8(vec![b'+'; 255]).unwrap()));
     source_vec.push((Mode::Data, source.to_string()));
     let parsed = translators::brain32::parse(source_vec);
     let brainfuck = translators::brain32::translate(parsed);

@@ -130,6 +130,9 @@ fn translate_token_raw(t: &Token) -> Vec<char> {
     .collect()
 }
 
+//ERROR FOUND for ADD/SUB:
+// IF cannot be nested, as they overwrite values in W, that may be needed by their containing IF statement to exit
+
 // More complex substitution values
 //basic data operations
 const DATA_ADD: &str = concat!(
@@ -169,9 +172,6 @@ const DATA_CLOSE: &str = concat!(
     data_zero_count_single_from!(3), //count 0s in W1
     ">]<",                           //go to W1
 );
-
-use std::fs::OpenOptions;
-use std::ops::Index;
 
 //move
 use crate::ptr_move_working_to_data;
