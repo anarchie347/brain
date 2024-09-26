@@ -1,5 +1,8 @@
 pub fn translate(source: Vec<CodeBlock>) -> String {
-    source.iter().flat_map(translate_block).collect()
+    let mut full = vec!['>'; 4]; //wraps code in arrows to go to D0 to start,
+    full.append(&mut source.iter().flat_map(translate_block).collect());
+    full.append(&mut vec!['<'; 4]);
+    full.iter().collect()
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
