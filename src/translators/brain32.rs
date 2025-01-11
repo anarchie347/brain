@@ -1,15 +1,16 @@
 pub fn parse(source: String) -> Vec<Token> {
     source
         .chars()
-        .map(|c| match c {
-            '+' => Token::Plus(None),
-            '-' => Token::Minus(None),
-            '>' => Token::Right,
-            '<' => Token::Left,
-            ',' => Token::Comma(SingleArg::Zero),
-            '.' => Token::Dot(SingleArg::Zero),
-            '[' => Token::Open(Vec::new()),
-            ']' => Token::Close(Vec::new()),
+        .filter_map(|c| match c {
+            '+' => Some(Token::Plus(None)),
+            '-' => Some(Token::Minus(None)),
+            '>' => Some(Token::Right),
+            '<' => Some(Token::Left),
+            ',' => Some(Token::Comma(SingleArg::Zero)),
+            '.' => Some(Token::Dot(SingleArg::Zero)),
+            '[' => Some(Token::Open(Vec::new())),
+            ']' => Some(Token::Close(Vec::new())),
+            _ => None,
         })
         .collect()
 }
