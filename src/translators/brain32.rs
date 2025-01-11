@@ -10,6 +10,7 @@ pub fn parse(source: String) -> Vec<Token> {
             '.' => Some(Token::Dot(SingleArg::Zero)),
             '[' => Some(Token::Open(Vec::new())),
             ']' => Some(Token::Close(Vec::new())),
+            ':' => Some(Token::DebugColon),
             _ => None,
         })
         .collect()
@@ -28,6 +29,7 @@ pub fn translate(parsed: Vec<Token>) -> String {
                 Token::Dot(_) => "<.>",
                 Token::Open(_) => TRANSLATION_OPEN_FULL,
                 Token::Close(_) => TRANSLATION_CLOSE_FULL,
+                Token::DebugColon => ":"
             })
             .collect::<String>())
 }
@@ -41,6 +43,7 @@ pub enum Token {
     Dot(SingleArg),
     Open(Vec<SingleArg>),
     Close(Vec<SingleArg>),
+    DebugColon,
 }
 
 pub enum SingleArg {
