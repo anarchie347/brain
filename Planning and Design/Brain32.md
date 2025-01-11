@@ -19,7 +19,12 @@ In the following, x represents a single number (0 to 3) and X represents a strin
 
 Internally memory is segmented into blocks of 5 brainfuck cells as follows:
 
-D D D D W D D D D W D D D D W ...
+W | D D D D W | D D D D W | D D D D W |...
 
 D represents 'data' cells which are used to store the 32bit numbers
 W represents 'working' cells which are used for calculations required to apply a brainfuck operation correctly to 4 cells
+
+each 4 D cells is followed by a W cell to create a block of 5.
+
+The first cell of the tape is also a W cell for efficiency reasons (allows all blocks to use the W behind them). Although this could be viewed as starting
+with a W then 4 D, algorithms primarily use the W after because it makes the algorithm slightly easier to understand, so it is best to view the W cell to be after the 4 D cells.
