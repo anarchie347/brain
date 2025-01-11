@@ -16,19 +16,20 @@ pub fn parse(source: String) -> Vec<Token> {
 }
 
 pub fn translate(parsed: Vec<Token>) -> String {
-    parsed
-        .iter()
-        .map(|t| match t {
-            Token::Plus(_) => TRANSLATION_ADD_FULL,
-            Token::Minus(_) => TRANSLATION_SUB_FULL,
-            Token::Right => TRANSLATION_RIGHT,
-            Token::Left => TRANSLATION_LEFT,
-            Token::Comma(_) => "<,>",
-            Token::Dot(_) => "<.>",
-            Token::Open(_) => TRANSLATION_OPEN_FULL,
-            Token::Close(_) => TRANSLATION_CLOSE_FULL,
-        })
-        .collect()
+    String::from(">>>>>") //Have to prepend with this because translations expect the pointer to be at W after first D cells (Tape starts W D D D D W ... and poijnter needs to be at 2nd W), this is index 5
+        + &(parsed
+            .iter()
+            .map(|t| match t {
+                Token::Plus(_) => TRANSLATION_ADD_FULL,
+                Token::Minus(_) => TRANSLATION_SUB_FULL,
+                Token::Right => TRANSLATION_RIGHT,
+                Token::Left => TRANSLATION_LEFT,
+                Token::Comma(_) => "<,>",
+                Token::Dot(_) => "<.>",
+                Token::Open(_) => TRANSLATION_OPEN_FULL,
+                Token::Close(_) => TRANSLATION_CLOSE_FULL,
+            })
+            .collect::<String>())
 }
 
 pub enum Token {
