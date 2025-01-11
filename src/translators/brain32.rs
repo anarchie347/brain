@@ -14,8 +14,8 @@ pub fn parse(source: String) -> Vec<Token> {
         .collect()
 }
 
-pub fn translate(source: Vec<Token>) -> String {
-    source
+pub fn translate(parsed: Vec<Token>) -> String {
+    parsed
         .iter()
         .map(|t| match t {
             Token::Plus(_) => TRANSLATION_ADD_FULL,
