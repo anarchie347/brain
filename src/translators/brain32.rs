@@ -63,12 +63,24 @@ const TRANSLATION_ADD_1: &str = "<<+<+<+<[-]+>>>>>[-]>>>>>[-]<<<<<<<[>>+>>>>>+<<
 const TRANSLATION_ADD_2: &str = "<<<+<+>>>>[-]>>>>>[-]<<<<<<<<[>>>+>>>>>+<<<<<<<<-]>>>>>>>>[<<<<<<<<+>>>>>>>>-]<<<<<[<<<<->>>>]";
 const TRANSLATION_ADD_3: &str = "<<<<+>>>>"; // simple, no carry logic needed. Script not used
 
+//No carry, just add to the individual cell
+const TRANSLATION_ADD_0_NOC: &str = "<+>";
+const TRANSLATION_ADD_1_NOC: &str = "<<+>>";
+const TRANSLATION_ADD_2_NOC: &str = "<<<+>>>";
+const TRANSLATION_ADD_3_NOC: &str = "<<<<+>>>>"; //same as regular add3
+
 
 const TRANSLATION_SUB_FULL: &str = "<<<<<[-]+>>>>>[-]>>>>>[-]<<<<<<[>+>>>>>+<<<<<<-]>>>>>>[<<<<<<+>>>>>>-]<<<<<[<<+<+<+<[-]>>>>>[-]][-]>>>>>[-]<<<<<<<[>>+>>>>>+<<<<<<<-]>>>>>>>[<<<<<<<+>>>>>>>-]<<<<<[<<<<<[>>+<+<[-]]>>>>>[-]][-]>>>>>[-]<<<<<<<<[>>>+>>>>>+<<<<<<<<-]>>>>>>>>[<<<<<<<<+>>>>>>>>-]<<<<<[<<<<<[>+<[-]]>>>>>[-]]<-<-<-<->>>>";
 const TRANSLATION_SUB_0: &str = TRANSLATION_SUB_FULL;
 const TRANSLATION_SUB_1: &str = "<<<<<[-]>>>>>[-]>>>>>[-]<<<<<<<[>>+>>>>>+<<<<<<<-]>>>>>>>[<<<<<<<+>>>>>>>-]<<<<<[<<<+<+<[-]>>>>>[-]][-]>>>>>[-]<<<<<<<<[>>>+>>>>>+<<<<<<<<-]>>>>>>>>[<<<<<<<<+>>>>>>>>-]<<<<<[<<<<<[>+<[-]]>>>>>[-]]<<-<-<->>>>";
 const TRANSLATION_SUB_2: &str = "[-]>>>>>[-]<<<<<<<<[>>>+>>>>>+<<<<<<<<-]>>>>>>>>[<<<<<<<<+>>>>>>>>-]<<<<<[<<<<+>>>>[-]]<<<-<-";
 const TRANSLATION_SUB_3: &str = "<<<<->>>>"; // simple, no carry logic needed. Script not used
+
+//No carry, just sub from the individual cell
+const TRANSLATION_SUB_0_NOC: &str = "<->";
+const TRANSLATION_SUB_1_NOC: &str = "<<->>";
+const TRANSLATION_SUB_2_NOC: &str = "<<<->>>";
+const TRANSLATION_SUB_3_NOC: &str = "<<<<->>>>"; //same as regular sub3
 
 const TRANSLATION_RIGHT: &str = ">>>>>"; //cells are grouped in blocks of 5
 
