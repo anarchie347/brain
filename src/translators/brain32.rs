@@ -64,6 +64,7 @@ const TRANSLATION_ADD_2: &str = "<<<+<+>>>>[-]>>>>>[-]<<<<<<<<[>>>+>>>>>+<<<<<<<
 const TRANSLATION_ADD_3: &str = "<<<<+>>>>"; // simple, no carry logic needed. Script not used
 
 //No carry, just add to the individual cell
+// simple so not script-generated
 const TRANSLATION_ADD_0_NOC: &str = "<+>";
 const TRANSLATION_ADD_1_NOC: &str = "<<+>>";
 const TRANSLATION_ADD_2_NOC: &str = "<<<+>>>";
@@ -77,6 +78,7 @@ const TRANSLATION_SUB_2: &str = "[-]>>>>>[-]<<<<<<<<[>>>+>>>>>+<<<<<<<<-]>>>>>>>
 const TRANSLATION_SUB_3: &str = "<<<<->>>>"; // simple, no carry logic needed. Script not used
 
 //No carry, just sub from the individual cell
+//simple so not script generated
 const TRANSLATION_SUB_0_NOC: &str = "<->";
 const TRANSLATION_SUB_1_NOC: &str = "<<->>";
 const TRANSLATION_SUB_2_NOC: &str = "<<<->>>";
