@@ -21,14 +21,14 @@ pub fn translate(parsed: Vec<Token>) -> String {
         + &(parsed
             .iter()
             .map(|t| match t {
-                Token::Plus(_) => TRANSLATION_ADD_FULL,
-                Token::Minus(_) => TRANSLATION_SUB_FULL,
+                Token::Plus(arg) => handle_add(arg),
+                Token::Minus(arg) => handle_sub(arg),
                 Token::Right => TRANSLATION_RIGHT,
                 Token::Left => TRANSLATION_LEFT,
                 Token::Comma(_) => "<,>",
                 Token::Dot(_) => "<.>",
-                Token::Open(_) => TRANSLATION_OPEN_FULL,
-                Token::Close(_) => TRANSLATION_CLOSE_FULL,
+                Token::Open(args) => handle_open(args),
+                Token::Close(args) => handle_close(args),
                 Token::DebugColon => ":"
             })
             .collect::<String>())
@@ -51,6 +51,97 @@ pub enum SingleArg {
     One,
     Two,
     Three,
+}
+
+fn handle_add(arg : &Option<SingleArg>) -> &'static str {
+    match arg {
+        None => TRANSLATION_ADD_FULL,
+        Some(a) => match a {
+            SingleArg::Zero => TRANSLATION_ADD_0,
+            SingleArg::One => TRANSLATION_ADD_1,
+            SingleArg::Two => TRANSLATION_ADD_2,
+            SingleArg::Three => TRANSLATION_ADD_3
+        }
+    }
+}
+fn handle_sub(arg : &Option<SingleArg>) -> &'static str {
+    match arg {
+        None => TRANSLATION_SUB_FULL,
+        Some(a) => match a {
+            SingleArg::Zero => TRANSLATION_SUB_0,
+            SingleArg::One => TRANSLATION_SUB_1,
+            SingleArg::Two => TRANSLATION_SUB_2,
+            SingleArg::Three => TRANSLATION_SUB_3
+        }
+    }
+}
+
+fn handle_open(args : &Vec<SingleArg>) -> &'static str {
+    let mut has3 = false;
+    let mut has2 = false;
+    let mut has1 = false;
+    let mut has0 = false;
+    for a in args {
+        match a {
+            SingleArg::Three => has3 = true,
+            SingleArg::Two => has2 = true,
+            SingleArg::One => has1 = true,
+            SingleArg::Zero => has0 = true
+        };
+    }
+    match (has3,has2,has1,has0) {
+        (true, true, true, true) => TRANSLATION_OPEN_3210,
+        (true, true, true, false) => TRANSLATION_OPEN_321,
+        (true, true, false, true) => TRANSLATION_OPEN_320,
+        (true, true, false, false) => TRANSLATION_OPEN_32,
+        (true, false, true, true) => TRANSLATION_OPEN_310,
+        (true, false, true, false) => TRANSLATION_OPEN_31,
+        (true, false, false, true) => TRANSLATION_OPEN_30,
+        (true, false, false, false) => TRANSLATION_OPEN_3,
+        (false, true, true, true) => TRANSLATION_OPEN_210,
+        (false, true, true, false) => TRANSLATION_OPEN_21,
+        (false, true, false, true) => TRANSLATION_OPEN_20,
+        (false, true, false, false) => TRANSLATION_OPEN_2,
+        (false, false, true, true) => TRANSLATION_OPEN_10,
+        (false, false, true, false) => TRANSLATION_OPEN_1,
+        (false, false, false, true) => TRANSLATION_OPEN_0,
+        (false, false, false, false) => TRANSLATION_OPEN_FULL
+
+    }
+}
+
+fn handle_close(args : &Vec<SingleArg>) -> &'static str {
+    let mut has3 = false;
+    let mut has2 = false;
+    let mut has1 = false;
+    let mut has0 = false;
+    for a in args {
+        match a {
+            SingleArg::Three => has3 = true,
+            SingleArg::Two => has2 = true,
+            SingleArg::One => has1 = true,
+            SingleArg::Zero => has0 = true
+        };
+    }
+    match (has3,has2,has1,has0) {
+        (true, true, true, true) => TRANSLATION_CLOSE_3210,
+        (true, true, true, false) => TRANSLATION_CLOSE_321,
+        (true, true, false, true) => TRANSLATION_CLOSE_320,
+        (true, true, false, false) => TRANSLATION_CLOSE_32,
+        (true, false, true, true) => TRANSLATION_CLOSE_310,
+        (true, false, true, false) => TRANSLATION_CLOSE_31,
+        (true, false, false, true) => TRANSLATION_CLOSE_30,
+        (true, false, false, false) => TRANSLATION_CLOSE_3,
+        (false, true, true, true) => TRANSLATION_CLOSE_210,
+        (false, true, true, false) => TRANSLATION_CLOSE_21,
+        (false, true, false, true) => TRANSLATION_CLOSE_20,
+        (false, true, false, false) => TRANSLATION_CLOSE_2,
+        (false, false, true, true) => TRANSLATION_CLOSE_10,
+        (false, false, true, false) => TRANSLATION_CLOSE_1,
+        (false, false, false, true) => TRANSLATION_CLOSE_0,
+        (false, false, false, false) => TRANSLATION_CLOSE_FULL
+
+    }
 }
 
 // Unless otherwise annotated, the following hardcoded conversions are generated using the following python scripts, the algorithms used are explained in the python source code: https://github.com/anarchie347/brain-translation-generation-scripts
