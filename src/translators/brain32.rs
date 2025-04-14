@@ -6,8 +6,8 @@ pub fn parse(source: String) -> Vec<Token> {
             '-' => Some(Token::Minus(None)),
             '>' => Some(Token::Right),
             '<' => Some(Token::Left),
-            ',' => Some(Token::Comma(SingleArg::Zero)),
-            '.' => Some(Token::Dot(SingleArg::Zero)),
+            ',' => Some(Token::Comma(None)),
+            '.' => Some(Token::Dot(None)),
             '[' => Some(Token::Open(Vec::new())),
             ']' => Some(Token::Close(Vec::new())),
             ':' => Some(Token::DebugColon),
@@ -25,8 +25,8 @@ pub fn translate(parsed: Vec<Token>) -> String {
                 Token::Minus(arg) => handle_sub(arg),
                 Token::Right => TRANSLATION_RIGHT,
                 Token::Left => TRANSLATION_LEFT,
-                Token::Comma(_) => "<,>",
-                Token::Dot(_) => "<.>",
+                Token::Comma(arg) => handle_com(arg),
+                Token::Dot(arg) => handle_dot(arg),
                 Token::Open(args) => handle_open(args),
                 Token::Close(args) => handle_close(args),
                 Token::DebugColon => ":"
@@ -39,8 +39,8 @@ pub enum Token {
     Minus(Option<SingleArg>),
     Right,
     Left,
-    Comma(SingleArg),
-    Dot(SingleArg),
+    Comma(Option<SingleArg>),
+    Dot(Option<SingleArg>),
     Open(Vec<SingleArg>),
     Close(Vec<SingleArg>),
     DebugColon,
@@ -72,6 +72,30 @@ fn handle_sub(arg : &Option<SingleArg>) -> &'static str {
             SingleArg::One => TRANSLATION_SUB_1,
             SingleArg::Two => TRANSLATION_SUB_2,
             SingleArg::Three => TRANSLATION_SUB_3
+        }
+    }
+}
+
+fn handle_com(arg : &Option<SingleArg>) -> &'static str{
+    match arg {
+        None => TRANSLATION_COM_0,
+        Some(a) => match a {
+            SingleArg::Zero => TRANSLATION_COM_0,
+            SingleArg::One => TRANSLATION_COM_1,
+            SingleArg::Two => TRANSLATION_COM_2,
+            SingleArg::Three => TRANSLATION_COM_3
+        }
+    }
+}
+
+fn handle_dot(arg : &Option<SingleArg>) -> &'static str{
+    match arg {
+        None => TRANSLATION_DOT_0,
+        Some(a) => match a {
+            SingleArg::Zero => TRANSLATION_DOT_0,
+            SingleArg::One => TRANSLATION_DOT_1,
+            SingleArg::Two => TRANSLATION_DOT_2,
+            SingleArg::Three => TRANSLATION_DOT_3
         }
     }
 }
@@ -174,6 +198,18 @@ const TRANSLATION_SUB_0_NOC: &str = "<->";
 const TRANSLATION_SUB_1_NOC: &str = "<<->>";
 const TRANSLATION_SUB_2_NOC: &str = "<<<->>>";
 const TRANSLATION_SUB_3_NOC: &str = "<<<<->>>>"; //same as regular sub3
+
+// dot and comma not script generated as very simple
+const TRANSLATION_COM_0: &str = "<,>";
+const TRANSLATION_COM_1: &str = "<<,>>";
+const TRANSLATION_COM_2: &str = "<<<,>>>";
+const TRANSLATION_COM_3: &str = "<<<<,>>>>";
+
+const TRANSLATION_DOT_0: &str = "<.>";
+const TRANSLATION_DOT_1: &str = "<<.>>";
+const TRANSLATION_DOT_2: &str = "<<<.>>>";
+const TRANSLATION_DOT_3: &str = "<<<<.>>>>";
+
 
 const TRANSLATION_RIGHT: &str = ">>>>>"; //cells are grouped in blocks of 5
 
