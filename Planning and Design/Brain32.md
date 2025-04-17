@@ -28,3 +28,5 @@ each 4 D cells is followed by a W cell to create a block of 5.
 
 The first cell of the tape is also a W cell for efficiency reasons (allows all blocks to use the W behind them). Although this could be viewed as starting
 with a W then 4 D, algorithms primarily use the W after because it makes the algorithm slightly easier to understand, so it is best to view the W cell to be after the 4 D cells.
+
+The next level up from Brain32 is Brain3U, which is a simple substitution of shortcuts for Brain32 code, so is not documented in its own file
