@@ -10,7 +10,9 @@ BrainASM code follows a similar style to low-level invocation of system calls on
 
 First, values (arguments) are loaded (copied) into the first few W cells, in an order defined by the operation. 
 Then the required operation is invoked, which operates on the arguments (which it knows the locations of as they are pre-determined), and leaves the result(s) in pre-determined locations at the start of the W cells.
-Operations can also take arguements known at compile time, in which case this will be compiled irectly into the code of the instruction.
+Operations can also take arguements known at compile time, in which case this will be compiled directly into the code of the instruction.
+
+Because arguement positions and count are constant and are defined in the language defintion, this allows the operation translations to freely use all W memory after the last argument cell
 
 Note: unlike syscalls, it is not necessary to store a code to represent the required operation as the operation is part of the code.
 
