@@ -4,7 +4,7 @@ The next level up from Brain3U
 
 BrainASM is intended to expose a language similar to a simplified assembly instruction
 
-It will segment the memory exposed by Brain3U into blocks of 3 cells: 'Data' (D), 'Working' (W), 'Move' (M). The exposed memory interface is only the D memory
+It will segment the memory exposed by Brain3U into blocks of 3 cells: 'Data' (D), 'Working' (W), 'Move' (M). The exposed memory interface is only the D memory. W memory is used for the operations, and M memory is used for manipulating the pointer to move it around memory (moving to known locations, following pointers etc)
 
 BrainASM code follows a similar style to low-level invocation of system calls on a standard operating system.
 
