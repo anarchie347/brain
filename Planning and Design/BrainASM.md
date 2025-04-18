@@ -4,7 +4,7 @@ The next level up from Brain3U
 
 BrainASM is intended to expose a language similar to a simplified assembly instruction
 
-It will segment the memory exposed by Brain3U into blocks of 3 cells: 'Data' (D), 'Working' (W), 'Move' (M). The exposed memory interface is only the D memory. W memory is used for the operations, and M memory is used for manipulating the pointer to move it around memory (moving to known locations, following pointers etc)
+It will segment the memory exposed by Brain3U into blocks of 3 cells: 'Stack' (S), 'Heap' (H), 'Working' (W), 'Move' (M). The exposed memory interface is only the S,H memory. W memory is used for the operations, and M memory is used for manipulating the pointer to move it around memory (moving to known locations, following pointers etc)
 
 BrainASM code follows a similar style to low-level invocation of system calls on a standard operating system.
 
@@ -21,14 +21,14 @@ BrainASM also includes 2 types. These are booleans and integers. booleans are ei
 In the following explanations, named arguments are hardcoded and known at compile time, arguments such as {0} indicate the value in W cell 0, which will not be known at compile time. Things after the '->' in the definition are return values
 
 The special instructions related to arg loading in BrainASM:
-- HLOAD x y: Loads (copy) a value from a hardcoded D address x into hardcoded W cell y. As both of these numbers are hardcoded, this is much faster than moving the pointer an amount not known at compile time
-- HMOVE x y: Moves a value from hardcoded W cell x to hardcoded W cell y. Useful as a faster option to relocate results from operations to be used as args for next ones
-- HSTOR x y: Stores (no copy) a value from hardcoded W cell x to hardcoded D address y. USed for extracting results from function calls
-- PLOAD x {0}: Follows the pointer {0}, and loads the value there into hardcoded W cell x
-- PSTOR x {0}: Follows the pointer {0}, and stores the value from hardcoded W cell x into it
+- SLOAD x y: Loads (copy) a value from a hardcoded S address x into hardcoded W cell y. Used for copying stack values into arguements
+- SMOVE x y: Moves a value from hardcoded W cell x to hardcoded W cell y. Useful as a faster option to relocate results from operations to be used as args for next ones
+- SSTOR x y: Stores (no copy) a value from hardcoded W cell x to hardcoded S address y. Used for extracting results from function calls to the stack
+- PLOAD x {0}: Follows the pointer {0} (H memory), and loads the value there into hardcoded W cell x
+- PSTOR x {0}: Follows the pointer {0} (H memory), and stores the value from hardcoded W cell x into it
 
 
-Note: H stands for Hardcoded, P stands for Pointer
+Note: S stands for Stack, P stands for Pointer
 
 
 BrainASM then supports the following (may be extended) operations:
