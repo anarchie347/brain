@@ -2,8 +2,8 @@ pub fn parse(source: String) -> Vec<Token> {
     source
         .chars()
         .filter_map(|c| match c {
-            '+' => Some(Token::Plus(None)),
-            '-' => Some(Token::Minus(None)),
+            '+' => Some(Token::Plus(None, false)),
+            '-' => Some(Token::Minus(None, false)),
             '>' => Some(Token::Right),
             '<' => Some(Token::Left),
             ',' => Some(Token::Comma(None)),
@@ -21,8 +21,8 @@ pub fn translate(parsed: Vec<Token>) -> String {
         + &(parsed
             .iter()
             .map(|t| match t {
-                Token::Plus(arg) => handle_add(arg),
-                Token::Minus(arg) => handle_sub(arg),
+                Token::Plus(arg, no_carry) => handle_add(arg, no_carry),
+                Token::Minus(arg, no_carry) => handle_sub(arg, no_carry),
                 Token::Right => TRANSLATION_RIGHT,
                 Token::Left => TRANSLATION_LEFT,
                 Token::Comma(arg) => handle_com(arg),
@@ -35,8 +35,8 @@ pub fn translate(parsed: Vec<Token>) -> String {
 }
 
 pub enum Token {
-    Plus(Option<SingleArg>),
-    Minus(Option<SingleArg>),
+    Plus(Option<SingleArg>, bool),
+    Minus(Option<SingleArg>, bool),
     Right,
     Left,
     Comma(Option<SingleArg>),
@@ -53,7 +53,21 @@ pub enum SingleArg {
     Three,
 }
 
-fn handle_add(arg : &Option<SingleArg>) -> &'static str {
+fn handle_add(arg : &Option<SingleArg>, no_carry : &bool) -> &'static str {
+    //nocarry
+    if *no_carry {
+        return match arg {
+            None => TRANSLATION_ADD_0_NOC,
+            Some(a) => match a {
+                SingleArg::Zero => TRANSLATION_ADD_0_NOC,
+                SingleArg::One => TRANSLATION_ADD_1_NOC,
+                SingleArg::Two => TRANSLATION_ADD_2_NOC,
+                SingleArg::Three => TRANSLATION_ADD_3_NOC
+            }
+        }
+    }
+
+    //carry
     match arg {
         None => TRANSLATION_ADD_FULL,
         Some(a) => match a {
@@ -64,7 +78,20 @@ fn handle_add(arg : &Option<SingleArg>) -> &'static str {
         }
     }
 }
-fn handle_sub(arg : &Option<SingleArg>) -> &'static str {
+fn handle_sub(arg : &Option<SingleArg>, no_carry : &bool) -> &'static str {
+    if *no_carry {
+        return match arg {
+            None => TRANSLATION_SUB_0_NOC,
+            Some(a) => match a {
+                SingleArg::Zero => TRANSLATION_SUB_0_NOC,
+                SingleArg::One => TRANSLATION_SUB_1_NOC,
+                SingleArg::Two => TRANSLATION_SUB_2_NOC,
+                SingleArg::Three => TRANSLATION_SUB_3_NOC
+            }
+        }
+    }
+
+    //carry
     match arg {
         None => TRANSLATION_SUB_FULL,
         Some(a) => match a {
