@@ -8,8 +8,8 @@ pub fn parse(source: String) -> Vec<Token> {
             '<' => Some(Token::Left),
             ',' => Some(Token::Comma(None)),
             '.' => Some(Token::Dot(None)),
-            '[' => Some(Token::Open(Vec::new())),
-            ']' => Some(Token::Close(Vec::new())),
+            '[' => Some(Token::Open(&[])),
+            ']' => Some(Token::Close(&[])),
             ':' => Some(Token::DebugColon),
             _ => None,
         })
@@ -27,8 +27,8 @@ pub fn translate(parsed: Vec<Token>) -> String {
                 Token::Left => TRANSLATION_LEFT,
                 Token::Comma(arg) => handle_com(arg),
                 Token::Dot(arg) => handle_dot(arg),
-                Token::Open(args) => handle_open(args),
-                Token::Close(args) => handle_close(args),
+                Token::Open(args) => handle_open(*args),
+                Token::Close(args) => handle_close(*args),
                 Token::DebugColon => ":"
             })
             .collect::<String>())
@@ -41,8 +41,8 @@ pub enum Token {
     Left,
     Comma(Option<SingleArg>),
     Dot(Option<SingleArg>),
-    Open(Vec<SingleArg>),
-    Close(Vec<SingleArg>),
+    Open(&'static [SingleArg]),
+    Close(&'static [SingleArg]),
     DebugColon,
 }
 
@@ -127,7 +127,7 @@ fn handle_dot(arg : &Option<SingleArg>) -> &'static str{
     }
 }
 
-fn handle_open(args : &Vec<SingleArg>) -> &'static str {
+fn handle_open(args : &[SingleArg]) -> &'static str {
     let mut has3 = false;
     let mut has2 = false;
     let mut has1 = false;
@@ -161,7 +161,7 @@ fn handle_open(args : &Vec<SingleArg>) -> &'static str {
     }
 }
 
-fn handle_close(args : &Vec<SingleArg>) -> &'static str {
+fn handle_close(args : &[SingleArg]) -> &'static str {
     let mut has3 = false;
     let mut has2 = false;
     let mut has1 = false;
