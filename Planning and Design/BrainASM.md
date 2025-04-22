@@ -8,7 +8,7 @@ It will segment the memory exposed by Brain3U into blocks of 5 cells: 'Stack' (S
 
 The stack/heap division is not exacty the same as in a standard programming language. In BrainASM the divide is:
 - Stack: Memory management is done during compilation, addresses arer worked out during compilation (in a higher level language) and are hardcoded by the time the compiler reaches BrainASM. The stack is only accessible by hardcoded accesses known at compile time.
-- Heap: Memory management is done during runtime. BrainASM is not memory safe and assumes all heap references are valid. BrainASM exposes 'malloc' and 'gccollect' to allocate heap, and gccollect to free all unused memory. There is no equivalent of 'free', only a full memory garbage collection.  (might change for performance reasons). These operations are implemented by the BrainASM compiler as implementing higher up would cause (even more) astronomical performance impact. The heap is only accessible by pointers stored in memory.
+- Heap: Memory management is done during runtime. BrainASM is not memory safe and assumes all heap references are valid. BrainASM exposes 'malloc', 'gccoll' and 'free'. malloc to allocate heap, gccoll to free all unused memory, free to free a specific block. These operations are implemented by the BrainASM compiler as implementing higher up would cause (even more) astronomical performance impact. The heap is only accessible by pointers stored in memory.
 
 The F memory is used to for flags, which are useful for memory traversal. The 0th block will have a certain F value to indicate it is the first block, so the pointer can find the start from anywhere. When loading a value from a pointer, the implementation will: follow the pointer, then change the F value to something (e.g. 5). Now to access this location (which is repeatedly needed for a move/copy), a simple search for 5 in F cells will get there a lot faster than following the pointer. When not in use for quick move flags, F primarily stored metadata about the H cell in that block (free, first allocated, last allocated)
 
@@ -35,6 +35,12 @@ The special instructions related to arg loading in BrainASM:
 
 
 Note: S stands for Stack, P stands for Pointer
+
+The memory management instructions:
+- MALLOC {0} -> {0}: allocates a block in heap size {0}, stores pointer to it in {0}
+- GCCOLL: Garbage collects all of memory
+- MFREEP {0}: Frees the block of memory at {0}
+- FALLOC x : Fixed malloc, takes a hardcoded size, more efficient. Useful for when initial size is known, but the data cannot be on the stack as the size may change
 
 
 BrainASM then supports the following (may be extended) operations:
