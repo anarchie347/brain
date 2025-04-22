@@ -42,6 +42,10 @@ The memory management instructions:
 - MFREEP {0}: Frees the block of memory at {0}
 - FALLOC x : Fixed malloc, takes a hardcoded size, more efficient. Useful for when initial size is known, but the data cannot be on the stack as the size may change
 
+Conditional instructions:
+- IF {0} {...}: takes a boolean in {0} and executes the block if it is true.
+- WHILE {0} {...}: takes a boolean in {0} and executes the block while it is true. (Pre-condition loop)
+
 
 BrainASM then supports the following (may be extended) operations:
 - IADD {0} {1} -> {0} {1}: stores ({0} + {1}) to {0}. Stores True to {1} if overflows
