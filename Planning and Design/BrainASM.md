@@ -1,6 +1,8 @@
 # BrainASM
 
-The next level up from Brain3U
+The next level up from 
+
+Note: this may get split up into two languages: BrainASM and BrainASU. BrainASM would only provide bare minimum interface, brainASU provides 'utils' - it exposes the language interface described in this document, which is then compiled to the minimal interface of BrainASM. e.g. BrainASU might epose an XOR operation which is compiles to only 'NOT', 'AND', 'OR' operations exposed by BrainASM
 
 BrainASM is intended to expose a language similar to a simplified assembly instruction
 
