@@ -1,4 +1,4 @@
-pub fn parse(source: String) -> Vec<Token> {
+pub fn parse(source: String) -> Vec<&'static Token> {
     source
         .chars()
         .filter_map(|c| match c {

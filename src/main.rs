@@ -2,19 +2,14 @@ use std::{env, io::Write};
 
 use brainfuckinterpreter::run;
 
+use crate::translators::{brain32::{self, translate}, brain3U::{self, TokenType}};
+
 mod brainfuckinterpreter;
 mod translators;
 
 fn main() {
-    //let args: Vec<String> = env::args().collect();
-    //let source = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
-    //let source = "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.+.-.";
-    //let source = "+#@";
 
-    let source = read_from_file(&String::from("in.txt"));
-
-    let parsed = translators::brain32::parse(source);
-    let brainfuck = translators::brain32::translate(parsed);
+    let brainfuck = brain32::translate(brain3U::translate(vec![brain3U::Call(brain3U::Zero)]));
     write_to_file(&brainfuck, &String::from("out.txt"));
     run(&brainfuck);
 }
