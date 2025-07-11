@@ -1,26 +1,28 @@
 use super::brain32::{self, Token};
-use std::rc::Rc;
+use std::{clone, rc::Rc};
 
 // implement clone for the Tokens
 // then prob get rid of this method, go with a procedural approach rather than functional, using a vec that is appended to
 
 
-pub fn translate(parsed : Vec<Rc<TokenType>>) -> Vec<Rc<brain32::Token>> {
+pub fn translate(parsed : Vec<TokenType>) -> Vec<brain32::Token> {
     parsed.into_iter().flat_map(|tt| match tt {
-        TokenType::Instruction(i) => &[i],
+        TokenType::Instruction(t) => vec![t],
         TokenType::Call(m) => match m {
-            Method::Zero => TRANSLATION_METHOD_ZERO
+            Method::Zero => TRANSLATION_METHOD_ZERO.to_vec()
         }
     }).collect()
 }
 
+#[derive(Clone)]
 pub enum TokenType {
     Instruction(brain32::Token),
     Call(Method)
 }
 
+#[derive(Clone)]
 pub enum Method {
-    Zero
+    Zero    
 }
 
 const TRANSLATION_METHOD_ZERO : &[brain32::Token] = &[

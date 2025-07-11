@@ -9,7 +9,7 @@ mod translators;
 
 fn main() {
 
-    let brainfuck = brain32::translate(brain3U::translate(vec![brain3U::Call(brain3U::Zero)]));
+    let brainfuck = brain32::translate(brain3U::translate(vec![brain3U::TokenType::Call(brain3U::Method::Zero)]));
     write_to_file(&brainfuck, &String::from("out.txt"));
     run(&brainfuck);
 }

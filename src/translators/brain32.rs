@@ -1,4 +1,4 @@
-pub fn parse(source: String) -> Vec<&'static Token> {
+pub fn parse(source: String) -> Vec<Token> {
     source
         .chars()
         .filter_map(|c| match c {
@@ -34,6 +34,7 @@ pub fn translate(parsed: Vec<Token>) -> String {
             .collect::<String>())
 }
 
+#[derive(Clone)]
 pub enum Token {
     Plus(Option<SingleArg>, bool),
     Minus(Option<SingleArg>, bool),
@@ -46,6 +47,7 @@ pub enum Token {
     DebugColon,
 }
 
+#[derive(Clone)]
 pub enum SingleArg {
     Zero,
     One,
